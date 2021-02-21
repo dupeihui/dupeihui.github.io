@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="背景：在并发编程中，相信大家对锁的概念都很熟悉。不熟悉的小伙伴也可以通过以下文章回顾一下：  什么是锁 JAVA中锁的解决方案 Java中单体应用锁的局限性&amp;分布式锁  通过以上文章，我们知道单体应用锁是在一个JVM进程内有效，无法跨JVM、跨进程。那么这时候需要找到JVM可以共同访问的第三方组件，通过第三方组件实现分布式锁。目前比较流行的分布式锁的解决方案有：  通过数据库悲观锁或者乐观">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于Redis实现分布式锁">
+<meta property="og:url" content="http://example.com/2021/02/20/%E5%9F%BA%E4%BA%8ERedis%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="背景：在并发编程中，相信大家对锁的概念都很熟悉。不熟悉的小伙伴也可以通过以下文章回顾一下：  什么是锁 JAVA中锁的解决方案 Java中单体应用锁的局限性&amp;分布式锁  通过以上文章，我们知道单体应用锁是在一个JVM进程内有效，无法跨JVM、跨进程。那么这时候需要找到JVM可以共同访问的第三方组件，通过第三方组件实现分布式锁。目前比较流行的分布式锁的解决方案有：  通过数据库悲观锁或者乐观">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-02-20T15:46:03.000Z">
+<meta property="article:modified_time" content="2021-02-21T15:49:18.826Z">
+<meta property="article:author" content="PD">
+<meta property="article:tag" content="Redis">
+<meta property="article:tag" content="分布式锁">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2021/02/20/%E5%9F%BA%E4%BA%8ERedis%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>基于Redis实现分布式锁 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/20/%E5%9F%BA%E4%BA%8ERedis%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="PD">
+      <meta itemprop="description" content="Cream rises to the top.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          基于Redis实现分布式锁
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-02-20 23:46:03" itemprop="dateCreated datePublished" datetime="2021-02-20T23:46:03+08:00">2021-02-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-02-21 23:49:18" itemprop="dateModified" datetime="2021-02-21T23:49:18+08:00">2021-02-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">分布式架构</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>背景：在并发编程中，相信大家对锁的概念都很熟悉。不熟悉的小伙伴也可以通过以下文章回顾一下：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1531449">什么是锁</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1532501">JAVA中锁的解决方案</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.pianshen.com/article/26761008680/">Java中单体应用锁的局限性&amp;分布式锁</a></li>
+</ul>
+<p>通过以上文章，我们知道单体应用锁是在一个JVM进程内有效，无法跨JVM、跨进程。那么这时候需要找到JVM可以共同访问的第三方组件，通过第三方组件实现分布式锁。目前比较流行的分布式锁的解决方案有：</p>
+<ul>
+<li>通过数据库悲观锁或者乐观锁实现分布式锁</li>
+<li>通过Redis实现分布式锁</li>
+<li>通过Zookeeper实现分布式锁</li>
+</ul>
+<p>接下来，本文将介绍分布式锁的一种实现：基于Redis实现分布式锁。</p>
+<h2 id="基于Redis的setnx自实现简单分布式锁"><a href="#基于Redis的setnx自实现简单分布式锁" class="headerlink" title="基于Redis的setnx自实现简单分布式锁"></a>基于Redis的setnx自实现简单分布式锁</h2><h3 id="加锁"><a href="#加锁" class="headerlink" title="加锁"></a>加锁</h3><p>加锁的过程实际上就是在Redis设置一个键值对，为避免死锁，设定一个过期时间。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SET lock_key random_value NX PX 5000</span><br></pre></td></tr></table></figure>
+<p><code>random_value</code>是客户端生成的唯一字符串<br><code>NX</code>代表只在键不存在时，才对键进行设置操作<br><code>PX 5000</code>表示设置键的过期时间为5000毫秒</p>
+<p>如果上面命令执行成功，则证明客户端获得了锁。</p>
+<h3 id="解锁"><a href="#解锁" class="headerlink" title="解锁"></a>解锁</h3><p>解锁的过程就是将键key删除，但也不能乱删，不能说客户端1的请求将客户端2的锁给删除掉。这时候<code>random_value</code>的作用就体现出来。  </p>
+<p>为了保证解锁操作的原子性，我们用LUA脚本完成这一操作。先判断当前锁的字符串是否与传入的值相等，是的话就删除Key，解锁成功。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if redis.call(&#39;get&#39;,KEYS[1]) &#x3D;&#x3D; ARGV[1] then</span><br><span class="line">   return redis.call(&#39;del&#39;,KEYS[1])</span><br><span class="line">else</span><br><span class="line">   return 0</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>这里基于SpringBoot项目实现，首先引入redis客户端maven依赖</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-data-redis&lt;&#x2F;artifactId&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure>
+<p>Redis加锁解锁的实现类RedisLock.java</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line">package com.pd.distributelock.lock;</span><br><span class="line"></span><br><span class="line">import lombok.extern.slf4j.Slf4j;</span><br><span class="line">import org.springframework.data.redis.connection.RedisStringCommands;</span><br><span class="line">import org.springframework.data.redis.core.RedisCallback;</span><br><span class="line">import org.springframework.data.redis.core.RedisTemplate;</span><br><span class="line">import org.springframework.data.redis.core.script.RedisScript;</span><br><span class="line">import org.springframework.data.redis.core.types.Expiration;</span><br><span class="line"></span><br><span class="line">import java.util.Arrays;</span><br><span class="line">import java.util.List;</span><br><span class="line">import java.util.UUID;</span><br><span class="line"></span><br><span class="line">@Slf4j</span><br><span class="line">public class RedisLock implements AutoCloseable &#123;</span><br><span class="line"></span><br><span class="line">    private RedisTemplate redisTemplate;</span><br><span class="line">    private String key;</span><br><span class="line">    private String value;</span><br><span class="line">    &#x2F;&#x2F;单位：秒</span><br><span class="line">    private int expireTime;</span><br><span class="line"></span><br><span class="line">    public RedisLock(RedisTemplate redisTemplate, String key, int expireTime) &#123;</span><br><span class="line">        this.redisTemplate &#x3D; redisTemplate;</span><br><span class="line">        this.key &#x3D; key;</span><br><span class="line">        this.value &#x3D; UUID.randomUUID().toString();</span><br><span class="line">        this.expireTime &#x3D; expireTime;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 获取分布式锁</span><br><span class="line">     * @return</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public boolean getLock() &#123;</span><br><span class="line">        RedisCallback&lt;Boolean&gt; redisCallback &#x3D; connection -&gt; &#123;</span><br><span class="line">            &#x2F;&#x2F;设置NX</span><br><span class="line">            RedisStringCommands.SetOption setOption &#x3D; RedisStringCommands.SetOption.ifAbsent();</span><br><span class="line">            &#x2F;&#x2F;设置过期时间</span><br><span class="line">            Expiration expiration &#x3D; Expiration.seconds(expireTime);</span><br><span class="line">            &#x2F;&#x2F;序列化key</span><br><span class="line">            byte[] redisKey &#x3D; redisTemplate.getKeySerializer().serialize(key);</span><br><span class="line">            &#x2F;&#x2F;序列化value</span><br><span class="line">            byte[] redisValue &#x3D; redisTemplate.getValueSerializer().serialize(value);</span><br><span class="line">            &#x2F;&#x2F;执行setnx操作</span><br><span class="line">            Boolean result &#x3D; connection.set(redisKey, redisValue, expiration, setOption);</span><br><span class="line">            return result;</span><br><span class="line">        &#125;;</span><br><span class="line">        Boolean lock &#x3D; (Boolean) redisTemplate.execute(redisCallback);</span><br><span class="line">        return lock;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public boolean unlock() &#123;</span><br><span class="line">        &#x2F;&#x2F;保证解锁操作的原子性，使用LUA脚本</span><br><span class="line">        String script &#x3D; &quot;if redis.call(&#39;get&#39;,KEYS[1]) &#x3D;&#x3D; ARGV[1] then\n&quot; +</span><br><span class="line">                        &quot;    return redis.call(&#39;del&#39;,KEYS[1])\n&quot; +</span><br><span class="line">                        &quot;else\n&quot; +</span><br><span class="line">                        &quot;    return 0\n&quot; +</span><br><span class="line">                        &quot;end&quot;;</span><br><span class="line"></span><br><span class="line">        RedisScript&lt;Boolean&gt; redisScript &#x3D; RedisScript.of(script,Boolean.class);</span><br><span class="line">        List&lt;String&gt; keys &#x3D; Arrays.asList(key);</span><br><span class="line"></span><br><span class="line">        Boolean result &#x3D; (Boolean)redisTemplate.execute(redisScript, keys, value);</span><br><span class="line">        log.info(&quot;释放锁的结果：&quot;+result);</span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void close() throws Exception &#123;</span><br><span class="line">        unlock();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后，写一个controller检验一下加锁解锁的过程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">package com.pd.distributelock.controller;</span><br><span class="line"></span><br><span class="line">import com.pd.distributelock.lock.RedisLock;</span><br><span class="line">import lombok.extern.slf4j.Slf4j;</span><br><span class="line">import org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line">import org.springframework.data.redis.core.RedisTemplate;</span><br><span class="line">import org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line">import org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line">@Slf4j</span><br><span class="line">@RestController</span><br><span class="line">public class RedisLockController &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private RedisTemplate redisTemplate;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(&quot;redisLock&quot;)</span><br><span class="line">    public String RedisLock() &#123;</span><br><span class="line">        log.info(&quot;我进入了方法&quot;);</span><br><span class="line">        try(RedisLock redisLock &#x3D; new RedisLock(redisTemplate, &quot;redisKey&quot;, 30)) &#123;</span><br><span class="line">            if(redisLock.getLock()) &#123;</span><br><span class="line">                log.info(&quot;我进入了锁&quot;);</span><br><span class="line">                Thread.sleep(15000);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; catch (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        log.info(&quot;方法执行完成&quot;);</span><br><span class="line">        return &quot;方法执行完成&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>分别以8080和8081端口同时启动两个应用<br>首先浏览器访问：<a target="_blank" rel="noopener" href="http://localhost:8080/redisLock">http://localhost:8080/redisLock</a><br>日志输出如下,在11:08:39获得了锁，线程休眠15秒后在11:08:54释放锁</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">2021-02-20 11:08:38.953  INFO 6685 --- [nio-8080-exec-1] c.p.d.controller.RedisLockController     : 我进入了方法</span><br><span class="line">2021-02-20 11:08:39.019  INFO 6685 --- [nio-8080-exec-1] c.p.d.controller.RedisLockController     : 我进入了锁</span><br><span class="line">2021-02-20 11:08:54.033  INFO 6685 --- [nio-8080-exec-1] com.pd.distributelock.lock.RedisLock     : 释放锁的结果：true</span><br><span class="line">2021-02-20 11:08:54.034  INFO 6685 --- [nio-8080-exec-1] c.p.d.controller.RedisLockController     : 方法执行完成</span><br></pre></td></tr></table></figure>
+<p>紧接着马上访问：<a target="_blank" rel="noopener" href="http://localhost:8081/redisLock">http://localhost:8081/redisLock</a><br>日志输出如下，在11:08:41进入方法，但是这时候另一个线程正占用着锁，所以这里获取锁失败</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2021-02-20 11:08:41.096  INFO 6691 --- [nio-8081-exec-1] c.p.d.controller.RedisLockController     : 我进入了方法</span><br><span class="line">2021-02-20 11:08:41.155  INFO 6691 --- [nio-8081-exec-1] com.pd.distributelock.lock.RedisLock     : 释放锁的结果：false</span><br><span class="line">2021-02-20 11:08:41.155  INFO 6691 --- [nio-8081-exec-1] c.p.d.controller.RedisLockController     : 方法执行完成</span><br></pre></td></tr></table></figure>
+<h2 id="基于Redisson的可重入锁实现分布式锁"><a href="#基于Redisson的可重入锁实现分布式锁" class="headerlink" title="基于Redisson的可重入锁实现分布式锁"></a>基于Redisson的可重入锁实现分布式锁</h2><p>在上面实现的代码中，很明显，线程一获得了锁，而线程二获取不到锁就执行失败了，线程二并不会阻塞等待或者异步执行获取锁，也就是说锁是不可重入的，这样是有问题的。接下来将介绍Redisson的可重入锁（Reentrant Lock）。  </p>
+<p>Redisson是一个在Redis的基础上实现的Java驻内存数据网格（In-Memory Data Grid），Redisson的宗旨是促进使用者对Redis的关注分离（Separation of Concern），从而让使用者能够将精力更集中地放在处理业务逻辑上。关于Redisson项目的详细介绍可以在<a target="_blank" rel="noopener" href="https://redisson.org/">官方网站</a>找到。</p>
+<h3 id="加锁-1"><a href="#加锁-1" class="headerlink" title="加锁"></a>加锁</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">RLock lock &#x3D; redisson.getLock(&quot;anyLock&quot;);</span><br><span class="line">&#x2F;&#x2F; 最常见的使用方法</span><br><span class="line">lock.lock();</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 加锁以后10秒钟自动解锁</span><br><span class="line">&#x2F;&#x2F; 无需调用unlock方法手动解锁</span><br><span class="line">lock.lock(10, TimeUnit.SECONDS);</span><br></pre></td></tr></table></figure>
+<h3 id="解锁-1"><a href="#解锁-1" class="headerlink" title="解锁"></a>解锁</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lock.unlock();</span><br></pre></td></tr></table></figure>
+<h3 id="实现-1"><a href="#实现-1" class="headerlink" title="实现"></a>实现</h3><p>引入maven依赖：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.redisson&lt;&#x2F;groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;redisson-spring-boot-starter&lt;&#x2F;artifactId&gt;</span><br><span class="line">    &lt;version&gt;3.15.0&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure>
+<p>写一个controller检验一下加锁解锁的过程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">package com.pd.distributelock.controller;</span><br><span class="line"></span><br><span class="line">import lombok.extern.slf4j.Slf4j;</span><br><span class="line">import org.redisson.api.RLock;</span><br><span class="line">import org.redisson.api.RedissonClient;</span><br><span class="line">import org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line">import org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line">import org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line">import java.util.concurrent.TimeUnit;</span><br><span class="line"></span><br><span class="line">@Slf4j</span><br><span class="line">@RestController</span><br><span class="line">public class RedissonLockController &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private RedissonClient redissonClient;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(&quot;redissonLock&quot;)</span><br><span class="line">    public String redissonLock() &#123;</span><br><span class="line">        RLock rLock &#x3D; redissonClient.getLock(&quot;order&quot;);</span><br><span class="line">        log.info(&quot;我进入了方法&quot;);</span><br><span class="line">        try &#123;</span><br><span class="line">            &#x2F;&#x2F; 加锁以后15秒钟自动解锁</span><br><span class="line">            rLock.lock(15, TimeUnit.SECONDS);</span><br><span class="line">            log.info(&quot;我获得了锁&quot;);</span><br><span class="line">            Thread.sleep(10000);</span><br><span class="line">        &#125; catch (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            rLock.unlock();</span><br><span class="line">            log.info(&quot;我释放了锁&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        log.info(&quot;方法执行完成&quot;);</span><br><span class="line">        return &quot;方法执行完成&quot;;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>分别以8080和8081端口同时启动两个应用<br>首先浏览器访问：<a target="_blank" rel="noopener" href="http://localhost:8080/redissonLock">http://localhost:8080/redissonLock</a><br>日志输出如下,在11:42:49获得了锁，线程休眠10秒后在11:42:59释放锁</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">2021-02-20 11:42:48.943  INFO 6685 --- [nio-8080-exec-4] c.p.d.controller.RedissonLockController  : 我进入了方法</span><br><span class="line">2021-02-20 11:42:49.623  INFO 6685 --- [nio-8080-exec-4] c.p.d.controller.RedissonLockController  : 我获得了锁</span><br><span class="line">2021-02-20 11:42:59.653  INFO 6685 --- [nio-8080-exec-4] c.p.d.controller.RedissonLockController  : 我释放了锁</span><br><span class="line">2021-02-20 11:42:59.655  INFO 6685 --- [nio-8080-exec-4] c.p.d.controller.RedissonLockController  : 方法执行完成</span><br></pre></td></tr></table></figure>
+<p>紧接着马上访问：<a target="_blank" rel="noopener" href="http://localhost:8081/redissonLock">http://localhost:8081/redissonLock</a><br>日志输出如下，在11:42:51进入方法，但是这时候另一个线程正占用着锁，这里阻塞等待，直到另一个线程释放锁，在11:42:59获得锁</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">2021-02-20 11:42:51.170  INFO 6691 --- [nio-8081-exec-4] c.p.d.controller.RedissonLockController  : 我进入了方法</span><br><span class="line">2021-02-20 11:42:59.667  INFO 6691 --- [nio-8081-exec-4] c.p.d.controller.RedissonLockController  : 我获得了锁</span><br><span class="line">2021-02-20 11:43:09.690  INFO 6691 --- [nio-8081-exec-4] c.p.d.controller.RedissonLockController  : 我释放了锁</span><br><span class="line">2021-02-20 11:43:09.691  INFO 6691 --- [nio-8081-exec-4] c.p.d.controller.RedissonLockController  : 方法执行完成</span><br></pre></td></tr></table></figure>
+<p>最后，源码地址：<a target="_blank" rel="noopener" href="https://github.com/dupeihui/distribute-lock-redis">https://github.com/dupeihui/distribute-lock-redis</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Redis/" rel="tag"># Redis</a>
+              <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" rel="tag"># 分布式锁</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/02/19/%E5%9F%BA%E4%BA%8EKafka%E3%80%81ELK%E6%90%AD%E5%BB%BA%E9%AB%98%E5%90%9E%E5%90%90%E9%87%8F%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86%E5%B9%B3%E5%8F%B0/" rel="prev" title="基于Kafka、ELK搭建高吞吐量日志收集平台">
+      <i class="fa fa-chevron-left"></i> 基于Kafka、ELK搭建高吞吐量日志收集平台
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/03/01/%E5%9F%BA%E4%BA%8EZookeeper%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" rel="next" title="基于Zookeeper实现分布式锁">
+      基于Zookeeper实现分布式锁 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8ERedis%E7%9A%84setnx%E8%87%AA%E5%AE%9E%E7%8E%B0%E7%AE%80%E5%8D%95%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81"><span class="nav-number">1.</span> <span class="nav-text">基于Redis的setnx自实现简单分布式锁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E9%94%81"><span class="nav-number">1.1.</span> <span class="nav-text">加锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%94%81"><span class="nav-number">1.2.</span> <span class="nav-text">解锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.3.</span> <span class="nav-text">实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8ERedisson%E7%9A%84%E5%8F%AF%E9%87%8D%E5%85%A5%E9%94%81%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81"><span class="nav-number">2.</span> <span class="nav-text">基于Redisson的可重入锁实现分布式锁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E9%94%81-1"><span class="nav-number">2.1.</span> <span class="nav-text">加锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%94%81-1"><span class="nav-number">2.2.</span> <span class="nav-text">解锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0-1"><span class="nav-number">2.3.</span> <span class="nav-text">实现</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">PD</p>
+  <div class="site-description" itemprop="description">Cream rises to the top.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">PD</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

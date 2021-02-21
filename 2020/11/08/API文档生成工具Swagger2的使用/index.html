@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="SpringBoot集成springfox-swagger2添加maven依赖： 1234567891011&lt;!--swagger2配置--&gt;&lt;dependency&gt;  &lt;groupId&gt;io.springfox&lt;&#x2F;groupId&gt;  &lt;artifactId&gt;springfox-swagger2&lt;&#x2F;artifac">
+<meta property="og:type" content="article">
+<meta property="og:title" content="API文档生成工具Swagger2的使用">
+<meta property="og:url" content="http://example.com/2020/11/08/API%E6%96%87%E6%A1%A3%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7Swagger2%E7%9A%84%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="SpringBoot集成springfox-swagger2添加maven依赖： 1234567891011&lt;!--swagger2配置--&gt;&lt;dependency&gt;  &lt;groupId&gt;io.springfox&lt;&#x2F;groupId&gt;  &lt;artifactId&gt;springfox-swagger2&lt;&#x2F;artifac">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2020/11/08/API%E6%96%87%E6%A1%A3%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7Swagger2%E7%9A%84%E4%BD%BF%E7%94%A8/swagger-1.png">
+<meta property="og:image" content="http://example.com/2020/11/08/API%E6%96%87%E6%A1%A3%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7Swagger2%E7%9A%84%E4%BD%BF%E7%94%A8/swagger-2.png">
+<meta property="og:image" content="http://example.com/2020/11/08/API%E6%96%87%E6%A1%A3%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7Swagger2%E7%9A%84%E4%BD%BF%E7%94%A8/swagger-3.png">
+<meta property="og:image" content="http://example.com/2020/11/08/API%E6%96%87%E6%A1%A3%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7Swagger2%E7%9A%84%E4%BD%BF%E7%94%A8/swagger-4.png">
+<meta property="og:image" content="http://example.com/2020/11/08/API%E6%96%87%E6%A1%A3%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7Swagger2%E7%9A%84%E4%BD%BF%E7%94%A8/doc-1.png">
+<meta property="og:image" content="http://example.com/2020/11/08/API%E6%96%87%E6%A1%A3%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7Swagger2%E7%9A%84%E4%BD%BF%E7%94%A8/doc-2.png">
+<meta property="article:published_time" content="2020-11-08T11:47:28.000Z">
+<meta property="article:modified_time" content="2021-02-21T13:58:08.948Z">
+<meta property="article:author" content="PD">
+<meta property="article:tag" content="swagger">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2020/11/08/API%E6%96%87%E6%A1%A3%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7Swagger2%E7%9A%84%E4%BD%BF%E7%94%A8/swagger-1.png">
+
+<link rel="canonical" href="http://example.com/2020/11/08/API%E6%96%87%E6%A1%A3%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7Swagger2%E7%9A%84%E4%BD%BF%E7%94%A8/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>API文档生成工具Swagger2的使用 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/11/08/API%E6%96%87%E6%A1%A3%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7Swagger2%E7%9A%84%E4%BD%BF%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="PD">
+      <meta itemprop="description" content="Cream rises to the top.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          API文档生成工具Swagger2的使用
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-08 19:47:28" itemprop="dateCreated datePublished" datetime="2020-11-08T19:47:28+08:00">2020-11-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-02-21 21:58:08" itemprop="dateModified" datetime="2021-02-21T21:58:08+08:00">2021-02-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%8D%95%E4%BD%93%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">单体架构</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="SpringBoot集成springfox-swagger2"><a href="#SpringBoot集成springfox-swagger2" class="headerlink" title="SpringBoot集成springfox-swagger2"></a>SpringBoot集成springfox-swagger2</h2><p>添加maven依赖：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--swagger2配置--&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">  &lt;groupId&gt;io.springfox&lt;&#x2F;groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;springfox-swagger2&lt;&#x2F;artifactId&gt;</span><br><span class="line">  &lt;version&gt;2.4.0&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">  &lt;groupId&gt;io.springfox&lt;&#x2F;groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;springfox-swagger-ui&lt;&#x2F;artifactId&gt;</span><br><span class="line">  &lt;version&gt;2.4.0&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure>
+<p>创建swagger的配置类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">package com.phd.config;</span><br><span class="line"></span><br><span class="line">import org.springframework.context.annotation.Bean;</span><br><span class="line">import org.springframework.context.annotation.Configuration;</span><br><span class="line">import springfox.documentation.builders.ApiInfoBuilder;</span><br><span class="line">import springfox.documentation.builders.PathSelectors;</span><br><span class="line">import springfox.documentation.builders.RequestHandlerSelectors;</span><br><span class="line">import springfox.documentation.service.ApiInfo;</span><br><span class="line">import springfox.documentation.service.Contact;</span><br><span class="line">import springfox.documentation.spi.DocumentationType;</span><br><span class="line">import springfox.documentation.spring.web.plugins.Docket;</span><br><span class="line">import springfox.documentation.swagger2.annotations.EnableSwagger2;</span><br><span class="line"></span><br><span class="line">@Configuration</span><br><span class="line">@EnableSwagger2</span><br><span class="line">public class Swagger2Configuration &#123;</span><br><span class="line"></span><br><span class="line">    @Bean</span><br><span class="line">    public Docket createRestApi() &#123;</span><br><span class="line">        return new Docket(DocumentationType.SWAGGER_2)</span><br><span class="line">                .apiInfo(apiInfo())</span><br><span class="line">                .select()</span><br><span class="line">                .apis(RequestHandlerSelectors.basePackage(&quot;com.phd.controller&quot;))</span><br><span class="line">                .paths(PathSelectors.any())</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private ApiInfo apiInfo() &#123;</span><br><span class="line">        return new ApiInfoBuilder()</span><br><span class="line">                .title(&quot;xx系统接口api&quot;)</span><br><span class="line">                .contact(new Contact(&quot;yourName&quot;, &quot;https:&#x2F;&#x2F;www.xxx.com&quot;, &quot;xxx@xxx.com&quot;))</span><br><span class="line">                .description(&quot;专为xx系统提供的api文档&quot;)</span><br><span class="line">                .version(&quot;1.0.1&quot;)</span><br><span class="line">                .termsOfServiceUrl(&quot;https:&#x2F;&#x2F;www.xxx.com&quot;)</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>访问接口文档地址：<a href="http://IP:port/swagger-ui.html#/">http://IP:port/swagger-ui.html#/</a><br>页面显示效果如下：  </p>
+<img src="/2020/11/08/API%E6%96%87%E6%A1%A3%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7Swagger2%E7%9A%84%E4%BD%BF%E7%94%A8/swagger-1.png" class="">
+
+<h2 id="Swagger常用注解详解"><a href="#Swagger常用注解详解" class="headerlink" title="Swagger常用注解详解"></a>Swagger常用注解详解</h2><table>
+<thead>
+<tr>
+<th align="center">注解</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">@Api</td>
+<td align="left">Api用在类上，说明该类的作用，可以标记一个Controller类作为swagger资源</td>
+</tr>
+<tr>
+<td align="center">@ApiOperation</td>
+<td align="left">用于方法，表示一个http请求的操作</td>
+</tr>
+<tr>
+<td align="center">@ApiParam</td>
+<td align="left">用于为请求参数添加说明</td>
+</tr>
+<tr>
+<td align="center">@ApiModel</td>
+<td align="left">请求或响应为实体类，用于对实体类说明</td>
+</tr>
+<tr>
+<td align="center">@ApiModelProperty</td>
+<td align="left">用于字段，表示对model属性的说明</td>
+</tr>
+<tr>
+<td align="center">@ApiIgnore</td>
+<td align="left">用于类或者方法上，可以不被swagger显示在页面上</td>
+</tr>
+</tbody></table>
+<p>具体使用举例说明：<br>@Api()<br>Api用在类上，说明该类的作用，可以标记一个Controller类作为swagger资源<br>value - url的路径值<br>tags - 说明</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Api(value &#x3D; &quot;&#x2F;users&quot;, tags &#x3D; &#123;&quot;用户操作相关接口&quot;&#125;)</span><br><span class="line">@RequestMapping(&quot;users&quot;)</span><br><span class="line">@RestController</span><br><span class="line">public class UsersController &#123;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<img src="/2020/11/08/API%E6%96%87%E6%A1%A3%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7Swagger2%E7%9A%84%E4%BD%BF%E7%94%A8/swagger-2.png" class="">
+
+<p>@ApiOperation()<br>用于方法，表示一个http请求的操作<br>value - 用于方法描述<br>notes - 用于提示内容<br>httpMethod - 请求方式  </p>
+<p>@ApiParam()<br>用于为请求参数添加说明<br>name - 属性名称<br>value - 属性值<br>required - 是否必输<br>example - 举例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@ApiOperation(value &#x3D; &quot;查询用户信息&quot;, notes &#x3D; &quot;根据用户id查询用户信息&quot;, httpMethod &#x3D; &quot;GET&quot;)</span><br><span class="line">   @GetMapping(&quot;&#x2F;getUsers&quot;)</span><br><span class="line">   public JsonResult getUsers(</span><br><span class="line">           @ApiParam(name &#x3D; &quot;id&quot;, value &#x3D; &quot;用户id&quot;, required &#x3D; true, example &#x3D; &quot;1&quot;)</span><br><span class="line">           @RequestParam String id)&#123;</span><br><span class="line">       Users users &#x3D; usersService.testSelectByPrimaryKey(id);</span><br><span class="line">       return JsonResult.ok(users);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<img src="/2020/11/08/API%E6%96%87%E6%A1%A3%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7Swagger2%E7%9A%84%E4%BD%BF%E7%94%A8/swagger-3.png" class="">
+
+<p>@ApiModel()<br>请求或响应为实体类，用于对实体类说明<br>value - 表示对象名<br>description - 描述  </p>
+<p>@ApiModelProperty()<br>用于字段，表示对model属性的说明<br>value - 字段说明<br>name - 重写属性名<br>required - 是否必输<br>example - 举例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">@ApiModel(value &#x3D; &quot;UserBO&quot;, description &#x3D; &quot;从客户端，由用户传入的数据封装在此entity中&quot;)</span><br><span class="line">public class UserBO &#123;</span><br><span class="line"></span><br><span class="line">    @ApiModelProperty(value &#x3D; &quot;用户id&quot;, name &#x3D; &quot;id&quot;, required &#x3D; true)</span><br><span class="line">    private String id;</span><br><span class="line"></span><br><span class="line">    @ApiModelProperty(value &#x3D; &quot;姓名&quot;, name &#x3D; &quot;username&quot;, required &#x3D; true)</span><br><span class="line">    private String username;</span><br><span class="line"></span><br><span class="line">    @ApiModelProperty(value &#x3D; &quot;密码&quot;, name &#x3D; &quot;password&quot;, required &#x3D; true)</span><br><span class="line">    private String password;</span><br><span class="line"></span><br><span class="line">    @ApiModelProperty(value &#x3D; &quot;手机号码&quot;, name &#x3D; &quot;mobile&quot;)</span><br><span class="line">    private String mobile;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<img src="/2020/11/08/API%E6%96%87%E6%A1%A3%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7Swagger2%E7%9A%84%E4%BD%BF%E7%94%A8/swagger-4.png" class="">
+
+<h2 id="Swagger另外一种UI风格"><a href="#Swagger另外一种UI风格" class="headerlink" title="Swagger另外一种UI风格"></a>Swagger另外一种UI风格</h2><p>添加maven依赖：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">  &lt;groupId&gt;com.github.xiaoymin&lt;&#x2F;groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;swagger-bootstrap-ui&lt;&#x2F;artifactId&gt;</span><br><span class="line">  &lt;version&gt;1.6&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure>
+<p>访问接口文档地址：<a href="http://IP:port/doc.html">http://IP:port/doc.html</a><br>页面显示效果如下：</p>
+<img src="/2020/11/08/API%E6%96%87%E6%A1%A3%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7Swagger2%E7%9A%84%E4%BD%BF%E7%94%A8/doc-1.png" class="">
+
+<img src="/2020/11/08/API%E6%96%87%E6%A1%A3%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7Swagger2%E7%9A%84%E4%BD%BF%E7%94%A8/doc-2.png" class="">
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/swagger/" rel="tag"># swagger</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/11/06/%E5%88%86%E9%A1%B5%E6%8F%92%E4%BB%B6PageHelper%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="prev" title="分页插件PageHelper的使用">
+      <i class="fa fa-chevron-left"></i> 分页插件PageHelper的使用
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/11/08/%E9%80%9A%E8%BF%87%E6%97%A5%E5%BF%97%E7%9B%91%E6%8E%A7service%E6%89%A7%E8%A1%8C%E6%97%B6%E9%97%B4/" rel="next" title="通过日志监控service执行时间">
+      通过日志监控service执行时间 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringBoot%E9%9B%86%E6%88%90springfox-swagger2"><span class="nav-number">1.</span> <span class="nav-text">SpringBoot集成springfox-swagger2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Swagger%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3%E8%AF%A6%E8%A7%A3"><span class="nav-number">2.</span> <span class="nav-text">Swagger常用注解详解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Swagger%E5%8F%A6%E5%A4%96%E4%B8%80%E7%A7%8DUI%E9%A3%8E%E6%A0%BC"><span class="nav-number">3.</span> <span class="nav-text">Swagger另外一种UI风格</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">PD</p>
+  <div class="site-description" itemprop="description">Cream rises to the top.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">PD</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

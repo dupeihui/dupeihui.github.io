@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Cream rises to the top.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/page/3/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Cream rises to the top.">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="PD">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/page/3/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : true,
+    isPost : false,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content index posts-expand">
+            
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/11/08/API%E6%96%87%E6%A1%A3%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7Swagger2%E7%9A%84%E4%BD%BF%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="PD">
+      <meta itemprop="description" content="Cream rises to the top.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/11/08/API%E6%96%87%E6%A1%A3%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7Swagger2%E7%9A%84%E4%BD%BF%E7%94%A8/" class="post-title-link" itemprop="url">API文档生成工具Swagger2的使用</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-08 19:47:28" itemprop="dateCreated datePublished" datetime="2020-11-08T19:47:28+08:00">2020-11-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-02-21 21:58:08" itemprop="dateModified" datetime="2021-02-21T21:58:08+08:00">2021-02-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%8D%95%E4%BD%93%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">单体架构</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="SpringBoot集成springfox-swagger2"><a href="#SpringBoot集成springfox-swagger2" class="headerlink" title="SpringBoot集成springfox-swagger2"></a>SpringBoot集成springfox-swagger2</h2><p>添加maven依赖：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--swagger2配置--&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">  &lt;groupId&gt;io.springfox&lt;&#x2F;groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;springfox-swagger2&lt;&#x2F;artifactId&gt;</span><br><span class="line">  &lt;version&gt;2.4.0&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">  &lt;groupId&gt;io.springfox&lt;&#x2F;groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;springfox-swagger-ui&lt;&#x2F;artifactId&gt;</span><br><span class="line">  &lt;version&gt;2.4.0&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure>
+<p>创建swagger的配置类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">package com.phd.config;</span><br><span class="line"></span><br><span class="line">import org.springframework.context.annotation.Bean;</span><br><span class="line">import org.springframework.context.annotation.Configuration;</span><br><span class="line">import springfox.documentation.builders.ApiInfoBuilder;</span><br><span class="line">import springfox.documentation.builders.PathSelectors;</span><br><span class="line">import springfox.documentation.builders.RequestHandlerSelectors;</span><br><span class="line">import springfox.documentation.service.ApiInfo;</span><br><span class="line">import springfox.documentation.service.Contact;</span><br><span class="line">import springfox.documentation.spi.DocumentationType;</span><br><span class="line">import springfox.documentation.spring.web.plugins.Docket;</span><br><span class="line">import springfox.documentation.swagger2.annotations.EnableSwagger2;</span><br><span class="line"></span><br><span class="line">@Configuration</span><br><span class="line">@EnableSwagger2</span><br><span class="line">public class Swagger2Configuration &#123;</span><br><span class="line"></span><br><span class="line">    @Bean</span><br><span class="line">    public Docket createRestApi() &#123;</span><br><span class="line">        return new Docket(DocumentationType.SWAGGER_2)</span><br><span class="line">                .apiInfo(apiInfo())</span><br><span class="line">                .select()</span><br><span class="line">                .apis(RequestHandlerSelectors.basePackage(&quot;com.phd.controller&quot;))</span><br><span class="line">                .paths(PathSelectors.any())</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private ApiInfo apiInfo() &#123;</span><br><span class="line">        return new ApiInfoBuilder()</span><br><span class="line">                .title(&quot;xx系统接口api&quot;)</span><br><span class="line">                .contact(new Contact(&quot;yourName&quot;, &quot;https:&#x2F;&#x2F;www.xxx.com&quot;, &quot;xxx@xxx.com&quot;))</span><br><span class="line">                .description(&quot;专为xx系统提供的api文档&quot;)</span><br><span class="line">                .version(&quot;1.0.1&quot;)</span><br><span class="line">                .termsOfServiceUrl(&quot;https:&#x2F;&#x2F;www.xxx.com&quot;)</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>访问接口文档地址：<a href="http://IP:port/swagger-ui.html#/">http://IP:port/swagger-ui.html#/</a><br>页面显示效果如下：  </p>
+<img src="/2020/11/08/API%E6%96%87%E6%A1%A3%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7Swagger2%E7%9A%84%E4%BD%BF%E7%94%A8/swagger-1.png" class="">
+
+<h2 id="Swagger常用注解详解"><a href="#Swagger常用注解详解" class="headerlink" title="Swagger常用注解详解"></a>Swagger常用注解详解</h2><table>
+<thead>
+<tr>
+<th align="center">注解</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">@Api</td>
+<td align="left">Api用在类上，说明该类的作用，可以标记一个Controller类作为swagger资源</td>
+</tr>
+<tr>
+<td align="center">@ApiOperation</td>
+<td align="left">用于方法，表示一个http请求的操作</td>
+</tr>
+<tr>
+<td align="center">@ApiParam</td>
+<td align="left">用于为请求参数添加说明</td>
+</tr>
+<tr>
+<td align="center">@ApiModel</td>
+<td align="left">请求或响应为实体类，用于对实体类说明</td>
+</tr>
+<tr>
+<td align="center">@ApiModelProperty</td>
+<td align="left">用于字段，表示对model属性的说明</td>
+</tr>
+<tr>
+<td align="center">@ApiIgnore</td>
+<td align="left">用于类或者方法上，可以不被swagger显示在页面上</td>
+</tr>
+</tbody></table>
+<p>具体使用举例说明：<br>@Api()<br>Api用在类上，说明该类的作用，可以标记一个Controller类作为swagger资源<br>value - url的路径值<br>tags - 说明</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Api(value &#x3D; &quot;&#x2F;users&quot;, tags &#x3D; &#123;&quot;用户操作相关接口&quot;&#125;)</span><br><span class="line">@RequestMapping(&quot;users&quot;)</span><br><span class="line">@RestController</span><br><span class="line">public class UsersController &#123;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<img src="/2020/11/08/API%E6%96%87%E6%A1%A3%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7Swagger2%E7%9A%84%E4%BD%BF%E7%94%A8/swagger-2.png" class="">
+
+<p>@ApiOperation()<br>用于方法，表示一个http请求的操作<br>value - 用于方法描述<br>notes - 用于提示内容<br>httpMethod - 请求方式  </p>
+<p>@ApiParam()<br>用于为请求参数添加说明<br>name - 属性名称<br>value - 属性值<br>required - 是否必输<br>example - 举例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@ApiOperation(value &#x3D; &quot;查询用户信息&quot;, notes &#x3D; &quot;根据用户id查询用户信息&quot;, httpMethod &#x3D; &quot;GET&quot;)</span><br><span class="line">   @GetMapping(&quot;&#x2F;getUsers&quot;)</span><br><span class="line">   public JsonResult getUsers(</span><br><span class="line">           @ApiParam(name &#x3D; &quot;id&quot;, value &#x3D; &quot;用户id&quot;, required &#x3D; true, example &#x3D; &quot;1&quot;)</span><br><span class="line">           @RequestParam String id)&#123;</span><br><span class="line">       Users users &#x3D; usersService.testSelectByPrimaryKey(id);</span><br><span class="line">       return JsonResult.ok(users);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<img src="/2020/11/08/API%E6%96%87%E6%A1%A3%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7Swagger2%E7%9A%84%E4%BD%BF%E7%94%A8/swagger-3.png" class="">
+
+<p>@ApiModel()<br>请求或响应为实体类，用于对实体类说明<br>value - 表示对象名<br>description - 描述  </p>
+<p>@ApiModelProperty()<br>用于字段，表示对model属性的说明<br>value - 字段说明<br>name - 重写属性名<br>required - 是否必输<br>example - 举例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">@ApiModel(value &#x3D; &quot;UserBO&quot;, description &#x3D; &quot;从客户端，由用户传入的数据封装在此entity中&quot;)</span><br><span class="line">public class UserBO &#123;</span><br><span class="line"></span><br><span class="line">    @ApiModelProperty(value &#x3D; &quot;用户id&quot;, name &#x3D; &quot;id&quot;, required &#x3D; true)</span><br><span class="line">    private String id;</span><br><span class="line"></span><br><span class="line">    @ApiModelProperty(value &#x3D; &quot;姓名&quot;, name &#x3D; &quot;username&quot;, required &#x3D; true)</span><br><span class="line">    private String username;</span><br><span class="line"></span><br><span class="line">    @ApiModelProperty(value &#x3D; &quot;密码&quot;, name &#x3D; &quot;password&quot;, required &#x3D; true)</span><br><span class="line">    private String password;</span><br><span class="line"></span><br><span class="line">    @ApiModelProperty(value &#x3D; &quot;手机号码&quot;, name &#x3D; &quot;mobile&quot;)</span><br><span class="line">    private String mobile;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<img src="/2020/11/08/API%E6%96%87%E6%A1%A3%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7Swagger2%E7%9A%84%E4%BD%BF%E7%94%A8/swagger-4.png" class="">
+
+<h2 id="Swagger另外一种UI风格"><a href="#Swagger另外一种UI风格" class="headerlink" title="Swagger另外一种UI风格"></a>Swagger另外一种UI风格</h2><p>添加maven依赖：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">  &lt;groupId&gt;com.github.xiaoymin&lt;&#x2F;groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;swagger-bootstrap-ui&lt;&#x2F;artifactId&gt;</span><br><span class="line">  &lt;version&gt;1.6&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure>
+<p>访问接口文档地址：<a href="http://IP:port/doc.html">http://IP:port/doc.html</a><br>页面显示效果如下：</p>
+<img src="/2020/11/08/API%E6%96%87%E6%A1%A3%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7Swagger2%E7%9A%84%E4%BD%BF%E7%94%A8/doc-1.png" class="">
+
+<img src="/2020/11/08/API%E6%96%87%E6%A1%A3%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7Swagger2%E7%9A%84%E4%BD%BF%E7%94%A8/doc-2.png" class="">
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/11/06/%E5%88%86%E9%A1%B5%E6%8F%92%E4%BB%B6PageHelper%E7%9A%84%E4%BD%BF%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="PD">
+      <meta itemprop="description" content="Cream rises to the top.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/11/06/%E5%88%86%E9%A1%B5%E6%8F%92%E4%BB%B6PageHelper%E7%9A%84%E4%BD%BF%E7%94%A8/" class="post-title-link" itemprop="url">分页插件PageHelper的使用</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-06 22:58:30" itemprop="dateCreated datePublished" datetime="2020-11-06T22:58:30+08:00">2020-11-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-02-21 21:41:06" itemprop="dateModified" datetime="2021-02-21T21:41:06+08:00">2021-02-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%8D%95%E4%BD%93%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">单体架构</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="PageHelper和Spring-Boot集成"><a href="#PageHelper和Spring-Boot集成" class="headerlink" title="PageHelper和Spring Boot集成"></a>PageHelper和Spring Boot集成</h2><h3 id="pagehelper-spring-boot-starter"><a href="#pagehelper-spring-boot-starter" class="headerlink" title="pagehelper-spring-boot-starter"></a>pagehelper-spring-boot-starter</h3><p>添加PageHelper提供的starter就完成了最基本的集成，依赖如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">  &lt;groupId&gt;com.github.pagehelper&lt;&#x2F;groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;pagehelper-spring-boot-starter&lt;&#x2F;artifactId&gt;</span><br><span class="line">  &lt;version&gt;版本号&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure>
+<p>在yml格式中配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pagehelper:</span><br><span class="line">    helperDialect: mysql</span><br><span class="line">    supportMethodsArguments: true</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>1.<code>helperDialect</code>:分页插件会自动检测当前的数据库链接，自动选择合适的分页方式。你可以配置<code>helperDialect</code>属性来指定分页插件使用哪种方言。配置时，可以使用下面的缩写值：<br><code>oracle</code>,<code>mysql</code>,<code>mariadb</code>,<code>sqlite</code>,<code>hsqldb</code>,<code>postgresql</code>,<code>db2</code>,<code>sqlserver</code>,<code>informix</code>,<code>h2</code>,<code>sqlserver2012</code>,<code>derby</code><br>2.<code>supportMethodsArguments</code>:支持通过 Mapper 接口参数来传递分页参数,默认值<code>false</code></p>
+</blockquote>
+<h2 id="在代码中使用"><a href="#在代码中使用" class="headerlink" title="在代码中使用"></a>在代码中使用</h2><p><strong>常用调用方式–<code>PageHelper.startPage</code> 静态方法调用</strong><br>在你需要进行分页的 MyBatis 查询方法前调用 <code>PageHelper.startPage</code> 静态方法即可，紧跟在这个方法后的第一个MyBatis 查询方法会被进行分页。<br><strong>例一：</strong>  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;获取第1页，10条内容，默认查询总数count</span><br><span class="line">PageHelper.startPage(1, 10);</span><br><span class="line">&#x2F;&#x2F;紧跟着的第一个select方法会被分页</span><br><span class="line">List&lt;User&gt; list &#x3D; userMapper.selectAll();</span><br><span class="line">assertEquals(2, list.get(0).getId());</span><br><span class="line">assertEquals(10, list.size());</span><br><span class="line">&#x2F;&#x2F;分页时，实际返回的结果list类型是Page&lt;E&gt;，如果想取出分页信息，需要强制转换为Page&lt;E&gt;</span><br><span class="line">assertEquals(182, ((Page) list).getTotal());</span><br></pre></td></tr></table></figure>
+<p><strong>例二，使用<code>PageInfo</code>的用法：</strong>  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;获取第1页，10条内容，默认查询总数count</span><br><span class="line">PageHelper.startPage(1, 10);</span><br><span class="line">List&lt;User&gt; list &#x3D; userMapper.selectAll();</span><br><span class="line">&#x2F;&#x2F;用PageInfo对结果进行包装</span><br><span class="line">PageInfo page &#x3D; new PageInfo(list);</span><br><span class="line">&#x2F;&#x2F;测试PageInfo全部属性</span><br><span class="line">&#x2F;&#x2F;PageInfo包含了非常全面的分页属性</span><br><span class="line">assertEquals(1, page.getPageNum());</span><br><span class="line">assertEquals(10, page.getPageSize());</span><br><span class="line">assertEquals(1, page.getStartRow());</span><br><span class="line">assertEquals(10, page.getEndRow());</span><br><span class="line">assertEquals(183, page.getTotal());</span><br><span class="line">assertEquals(19, page.getPages());</span><br><span class="line">assertEquals(1, page.getFirstPage());</span><br><span class="line">assertEquals(8, page.getLastPage());</span><br><span class="line">assertEquals(true, page.isFirstPage());</span><br><span class="line">assertEquals(false, page.isLastPage());</span><br><span class="line">assertEquals(false, page.isHasPreviousPage());</span><br><span class="line">assertEquals(true, page.isHasNextPage());</span><br></pre></td></tr></table></figure>
+<p>注：参考PageHelper作者，传送门–<a target="_blank" rel="noopener" href="https://github.com/pagehelper/Mybatis-PageHelper/blob/master/wikis/zh/HowToUse.md">分页插件PageHelper如何使用？</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/11/05/%E9%80%9A%E7%94%A8mapper%E7%9A%84%E4%BD%BF%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="PD">
+      <meta itemprop="description" content="Cream rises to the top.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/11/05/%E9%80%9A%E7%94%A8mapper%E7%9A%84%E4%BD%BF%E7%94%A8/" class="post-title-link" itemprop="url">通用mapper的使用</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-05 12:33:08" itemprop="dateCreated datePublished" datetime="2020-11-05T12:33:08+08:00">2020-11-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-02-21 20:22:25" itemprop="dateModified" datetime="2021-02-21T20:22:25+08:00">2021-02-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%8D%95%E4%BD%93%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">单体架构</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>通用mapper是一个可以实现任意MyBatis通用方法的框架，项目提供了常规的增删改查操作以及<code>Example</code>相关的单表操作。通用mapper是为了解决MyBatis使用中90%的基本操作，使用它可以很方便的进行开发，可以节省开发人员大量的时间。  </p>
+<h2 id="通用mapper和Spring-Boot集成"><a href="#通用mapper和Spring-Boot集成" class="headerlink" title="通用mapper和Spring Boot集成"></a>通用mapper和Spring Boot集成</h2><h3 id="mapper-spring-boot-starter"><a href="#mapper-spring-boot-starter" class="headerlink" title="mapper-spring-boot-starter"></a>mapper-spring-boot-starter</h3><blockquote>
+<p>在starter的逻辑中，如果你没有使用<code>@MapperScan</code>注解，你就需要在你的接口上增加 <code>@Mapper</code>注解，否则MyBatis无法判断扫描哪些接口。  </p>
+</blockquote>
+<p>你只需要添加通用Mapper提供的starter就完成了最基本的集成，依赖如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">  &lt;groupId&gt;tk.mybatis&lt;&#x2F;groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;mapper-spring-boot-starter&lt;&#x2F;artifactId&gt;</span><br><span class="line">  &lt;version&gt;版本号&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>最新版本号可以从下面地址查看：<br><a target="_blank" rel="noopener" href="http://mvnrepository.com/artifact/tk.mybatis/mapper-spring-boot-starter">http://mvnrepository.com/artifact/tk.mybatis/mapper-spring-boot-starter</a></p>
+</blockquote>
+<p>在yml格式中配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mapper:</span><br><span class="line">  mappers: tk.mybatis.mapper.common.Mapper</span><br><span class="line">  not-empty: false</span><br><span class="line">  identity: MYSQL</span><br></pre></td></tr></table></figure>
+<h3 id="MapperScan-注解配置"><a href="#MapperScan-注解配置" class="headerlink" title="@MapperScan 注解配置"></a>@MapperScan 注解配置</h3><p>你可以给带有<code>@Configuration</code>的类配置该注解，或者直接配置到Spring Boot的启动类上，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@tk.mybatis.spring.annotation.MapperScan(basePackages &#x3D; &quot;扫描包&quot;)</span><br><span class="line">@SpringBootApplication</span><br><span class="line">public class Application &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        SpringApplication.run(Application.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="通用mapper接口所封装的常用方法"><a href="#通用mapper接口所封装的常用方法" class="headerlink" title="通用mapper接口所封装的常用方法"></a>通用mapper接口所封装的常用方法</h2><p>Mapper&lt;T&gt;中所继承的父类，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public interface Mapper&lt;T&gt; extends</span><br><span class="line">        BaseMapper&lt;T&gt;,</span><br><span class="line">        ExampleMapper&lt;T&gt;,</span><br><span class="line">        RowBoundsMapper&lt;T&gt;,</span><br><span class="line">        Marker &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>分别来看一下各个父类中的方法有些啥？  </p>
+<h3 id="BaseMapper-lt-T-gt"><a href="#BaseMapper-lt-T-gt" class="headerlink" title="BaseMapper&lt;T&gt;"></a>BaseMapper&lt;T&gt;</h3><table>
+<thead>
+<tr>
+<th align="center">类</th>
+<th align="center">方法</th>
+<th align="center">操作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">BaseSelectMapper</td>
+<td align="center">T selectOne(T record)</td>
+<td align="center">根据实体类中的属性查询表数据，返回单个实体</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">List<T> select(T record)</td>
+<td align="center">根据实体类中的属性查询表数据，返回符合条件的list</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">List<T> selectAll()</td>
+<td align="center">返回该表所有记录</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">int selectCount(T record)</td>
+<td align="center">根据条件查询记录数</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">T selectByPrimaryKey(Object key)</td>
+<td align="center">根据主键查询单条记录</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">boolean existsWithPrimaryKey(Object key)</td>
+<td align="center">查询主键是否存在，返回true或false</td>
+</tr>
+<tr>
+<td align="center">BaseInsertMapper</td>
+<td align="center">int insert(T record)</td>
+<td align="center">插入一条记录，属性为null也会保存，不会使用数据库默认值</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">int insertSelective(T record)</td>
+<td align="center">插入一条记录，属性为null不会保存，会使用数据库默认值</td>
+</tr>
+<tr>
+<td align="center">BaseUpdateMapper</td>
+<td align="center">int updateByPrimaryKey(T record)</td>
+<td align="center">根据主键更新实体全部字段，null值会被更新</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">int updateByPrimaryKeySelective(T record)</td>
+<td align="center">根据主键更新属性不为null的值</td>
+</tr>
+<tr>
+<td align="center">BaseDeleteMapper</td>
+<td align="center">int delete(T record)</td>
+<td align="center">根据实体属性作为条件进行删除，查询条件使用等号</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">int deleteByPrimaryKey(Object key)</td>
+<td align="center">根据主键字段进行删除，方法参数必须包含完整的主键属性</td>
+</tr>
+</tbody></table>
+<h3 id="ExampleMapper-lt-T-gt"><a href="#ExampleMapper-lt-T-gt" class="headerlink" title="ExampleMapper&lt;T&gt;"></a>ExampleMapper&lt;T&gt;</h3><blockquote>
+<p>Example类是用来提供给用户实现自定义条件的，也就是where条件，主要方法见如下表格：</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th align="center">类</th>
+<th align="center">方法</th>
+<th align="center">操作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">SelectByExampleMapper</td>
+<td align="center">List<T> selectByExample(Object example)</td>
+<td align="center">根据Example条件进行查询</td>
+</tr>
+<tr>
+<td align="center">SelectOneByExampleMapper</td>
+<td align="center">T selectOneByExample(Object example)</td>
+<td align="center">根据Example条件进行查询</td>
+</tr>
+<tr>
+<td align="center">SelectCountByExampleMapper</td>
+<td align="center">int selectCountByExample(Object example)</td>
+<td align="center">根据Example条件进行查询总数</td>
+</tr>
+<tr>
+<td align="center">DeleteByExampleMapper</td>
+<td align="center">int deleteByExample(Object example)</td>
+<td align="center">根据Example条件删除数据</td>
+</tr>
+<tr>
+<td align="center">UpdateByExampleMapper</td>
+<td align="center">int updateByExample(@Param(“record”) T record, @Param(“example”) Object example)</td>
+<td align="center">根据Example条件更新实体<code>record</code>包含的全部属性，null值会被更新</td>
+</tr>
+<tr>
+<td align="center">UpdateByExampleSelectiveMapper</td>
+<td align="center">int updateByExampleSelective(@Param(“record”) T record, @Param(“example”) Object example)</td>
+<td align="center">根据Example条件更新实体<code>record</code>包含的不是null的属性值</td>
+</tr>
+</tbody></table>
+<h3 id="RowBoundsMapper-lt-T-gt"><a href="#RowBoundsMapper-lt-T-gt" class="headerlink" title="RowBoundsMapper&lt;T&gt;"></a>RowBoundsMapper&lt;T&gt;</h3><blockquote>
+<p>这个是用于做分页的，我们可以使用page-helper这个组件来替代这个分页实现。</p>
+</blockquote>
+<p><strong>总结</strong><br>通用mapper所提供的CRUD方法对单表操作，大大提高开发效率，当然复杂的多表操作还是需要在mapper.xml中自己去编写sql代码实现。<br>注：参考通用mapper作者，传送门–<a target="_blank" rel="noopener" href="https://github.com/abel533/Mapper/wiki">通用Mapper官方文档</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/11/01/MyBatis-Generator%E6%95%B0%E6%8D%AE%E5%BA%93%E9%80%86%E5%90%91%E7%94%9F%E6%88%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="PD">
+      <meta itemprop="description" content="Cream rises to the top.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/11/01/MyBatis-Generator%E6%95%B0%E6%8D%AE%E5%BA%93%E9%80%86%E5%90%91%E7%94%9F%E6%88%90/" class="post-title-link" itemprop="url">MyBatis Generator数据库逆向生成</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-01 20:40:00" itemprop="dateCreated datePublished" datetime="2020-11-01T20:40:00+08:00">2020-11-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-02-21 20:13:16" itemprop="dateModified" datetime="2021-02-21T20:13:16+08:00">2021-02-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%8D%95%E4%BD%93%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">单体架构</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>mybatis-generator-core集成通用mapper插件，生成实体类，mapper接口以及对应的XML文件。  </p>
+<p>工程目录如下图：  </p>
+<img src="/2020/11/01/MyBatis-Generator%E6%95%B0%E6%8D%AE%E5%BA%93%E9%80%86%E5%90%91%E7%94%9F%E6%88%90/MBG-menu.png" class="">
+
+<p>1.pom.xml，添加相关依赖：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;project xmlns&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0&quot;</span><br><span class="line">         xmlns:xsi&#x3D;&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2001&#x2F;XMLSchema-instance&quot;</span><br><span class="line">         xsi:schemaLocation&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0 http:&#x2F;&#x2F;maven.apache.org&#x2F;xsd&#x2F;maven-4.0.0.xsd&quot;&gt;</span><br><span class="line">    &lt;modelVersion&gt;4.0.0&lt;&#x2F;modelVersion&gt;</span><br><span class="line"></span><br><span class="line">    &lt;groupId&gt;com.phd&lt;&#x2F;groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;mybatis-generator-example&lt;&#x2F;artifactId&gt;</span><br><span class="line">    &lt;version&gt;1.0-SNAPSHOT&lt;&#x2F;version&gt;</span><br><span class="line"></span><br><span class="line">    &lt;properties&gt;</span><br><span class="line">        &lt;project.build.sourceEncoding&gt;UTF-8&lt;&#x2F;project.build.sourceEncoding&gt;</span><br><span class="line">    &lt;&#x2F;properties&gt;</span><br><span class="line"></span><br><span class="line">    &lt;dependencies&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- 引入log4j日志依赖 --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter-log4j&lt;&#x2F;artifactId&gt;</span><br><span class="line">            &lt;version&gt;1.3.8.RELEASE&lt;&#x2F;version&gt;</span><br><span class="line">        &lt;&#x2F;dependency&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- 阿里开源数据源 --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;com.alibaba&lt;&#x2F;groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;druid&lt;&#x2F;artifactId&gt;</span><br><span class="line">            &lt;version&gt;1.1.0&lt;&#x2F;version&gt;</span><br><span class="line">        &lt;&#x2F;dependency&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;com.alibaba&lt;&#x2F;groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;druid-spring-boot-starter&lt;&#x2F;artifactId&gt;</span><br><span class="line">            &lt;version&gt;1.1.0&lt;&#x2F;version&gt;</span><br><span class="line">        &lt;&#x2F;dependency&gt;</span><br><span class="line"></span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;mysql&lt;&#x2F;groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;mysql-connector-java&lt;&#x2F;artifactId&gt;</span><br><span class="line">            &lt;version&gt;5.1.41&lt;&#x2F;version&gt;</span><br><span class="line">        &lt;&#x2F;dependency&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!--mybatis--&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.mybatis.spring.boot&lt;&#x2F;groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;mybatis-spring-boot-starter&lt;&#x2F;artifactId&gt;</span><br><span class="line">            &lt;version&gt;1.3.1&lt;&#x2F;version&gt;</span><br><span class="line">        &lt;&#x2F;dependency&gt;</span><br><span class="line">        &lt;!--mapper--&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;tk.mybatis&lt;&#x2F;groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;mapper-spring-boot-starter&lt;&#x2F;artifactId&gt;</span><br><span class="line">            &lt;version&gt;1.2.4&lt;&#x2F;version&gt;</span><br><span class="line">        &lt;&#x2F;dependency&gt;</span><br><span class="line">        &lt;!--pagehelper--&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;com.github.pagehelper&lt;&#x2F;groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;pagehelper-spring-boot-starter&lt;&#x2F;artifactId&gt;</span><br><span class="line">            &lt;version&gt;1.2.3&lt;&#x2F;version&gt;</span><br><span class="line">        &lt;&#x2F;dependency&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- mybatis 逆向生成工具  --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.mybatis.generator&lt;&#x2F;groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;mybatis-generator-core&lt;&#x2F;artifactId&gt;</span><br><span class="line">            &lt;version&gt;1.3.2&lt;&#x2F;version&gt;</span><br><span class="line">            &lt;scope&gt;compile&lt;&#x2F;scope&gt;</span><br><span class="line">            &lt;optional&gt;true&lt;&#x2F;optional&gt;</span><br><span class="line">        &lt;&#x2F;dependency&gt;</span><br><span class="line">    &lt;&#x2F;dependencies&gt;</span><br><span class="line"></span><br><span class="line">&lt;&#x2F;project&gt;</span><br></pre></td></tr></table></figure>
+<p>2.MyMapper接口，继承Mapper、MySqlMapper。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">package com.phd.my.mapper;</span><br><span class="line"></span><br><span class="line">import tk.mybatis.mapper.common.Mapper;</span><br><span class="line">import tk.mybatis.mapper.common.MySqlMapper;</span><br><span class="line"></span><br><span class="line">public interface MyMapper&lt;T&gt; extends Mapper&lt;T&gt;,MySqlMapper&lt;T&gt; &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>3.generatorConfig.xml配置文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE generatorConfiguration</span><br><span class="line">        PUBLIC &quot;-&#x2F;&#x2F;mybatis.org&#x2F;&#x2F;DTD MyBatis Generator Configuration 1.0&#x2F;&#x2F;EN&quot;</span><br><span class="line">        &quot;http:&#x2F;&#x2F;mybatis.org&#x2F;dtd&#x2F;mybatis-generator-config_1_0.dtd&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;generatorConfiguration&gt;</span><br><span class="line">    &lt;context id&#x3D;&quot;MysqlContext&quot; targetRuntime&#x3D;&quot;MyBatis3Simple&quot; defaultModelType&#x3D;&quot;flat&quot;&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- 通用mapper --&gt;</span><br><span class="line">        &lt;plugin type&#x3D;&quot;tk.mybatis.mapper.generator.MapperPlugin&quot;&gt;</span><br><span class="line">            &lt;property name&#x3D;&quot;mappers&quot; value&#x3D;&quot;com.phd.my.mapper.MyMapper&quot;&#x2F;&gt;</span><br><span class="line">            &lt;property name&#x3D;&quot;beginningDelimiter&quot; value&#x3D;&quot;&#96;&quot;&#x2F;&gt;</span><br><span class="line">            &lt;property name&#x3D;&quot;endingDelimiter&quot; value&#x3D;&quot;&#96;&quot;&#x2F;&gt;</span><br><span class="line">        &lt;&#x2F;plugin&gt;</span><br><span class="line"></span><br><span class="line">        &lt;jdbcConnection driverClass&#x3D;&quot;com.mysql.jdbc.Driver&quot;</span><br><span class="line">                        connectionURL&#x3D;&quot;jdbc:mysql:&#x2F;&#x2F;localhost:3306&#x2F;foodie-shop-dev&quot;</span><br><span class="line">                        userId&#x3D;&quot;root&quot;</span><br><span class="line">                        password&#x3D;&quot;root&quot;&gt;</span><br><span class="line">        &lt;&#x2F;jdbcConnection&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- 对应生成的pojo所在包 --&gt;</span><br><span class="line">        &lt;javaModelGenerator targetPackage&#x3D;&quot;com.phd.pojo&quot; targetProject&#x3D;&quot;src&#x2F;main&#x2F;java&quot;&#x2F;&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- 对应生成的mapper.xml所在目录 --&gt;</span><br><span class="line">        &lt;sqlMapGenerator targetPackage&#x3D;&quot;mapper&quot; targetProject&#x3D;&quot;src&#x2F;main&#x2F;resources&quot;&#x2F;&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- 配置mapper对应的java映射 --&gt;</span><br><span class="line">        &lt;javaClientGenerator targetPackage&#x3D;&quot;com.phd.mapper&quot; targetProject&#x3D;&quot;src&#x2F;main&#x2F;java&quot; type&#x3D;&quot;XMLMAPPER&quot;&#x2F;&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- 数据库表 --&gt;</span><br><span class="line">        &lt;table tableName&#x3D;&quot;carousel&quot;&gt;&lt;&#x2F;table&gt;</span><br><span class="line">        &lt;table tableName&#x3D;&quot;category&quot;&gt;&lt;&#x2F;table&gt;</span><br><span class="line">        &lt;table tableName&#x3D;&quot;items&quot;&gt;&lt;&#x2F;table&gt;</span><br><span class="line">        &lt;table tableName&#x3D;&quot;items_comments&quot;&gt;&lt;&#x2F;table&gt;</span><br><span class="line">        &lt;table tableName&#x3D;&quot;items_img&quot;&gt;&lt;&#x2F;table&gt;</span><br><span class="line">        &lt;table tableName&#x3D;&quot;items_param&quot;&gt;&lt;&#x2F;table&gt;</span><br><span class="line">        &lt;table tableName&#x3D;&quot;items_spec&quot;&gt;&lt;&#x2F;table&gt;</span><br><span class="line">        &lt;table tableName&#x3D;&quot;order_items&quot;&gt;&lt;&#x2F;table&gt;</span><br><span class="line">        &lt;table tableName&#x3D;&quot;order_status&quot;&gt;&lt;&#x2F;table&gt;</span><br><span class="line">        &lt;table tableName&#x3D;&quot;orders&quot;&gt;&lt;&#x2F;table&gt;</span><br><span class="line">        &lt;table tableName&#x3D;&quot;users&quot;&gt;&lt;&#x2F;table&gt;</span><br><span class="line">        &lt;table tableName&#x3D;&quot;user_address&quot;&gt;&lt;&#x2F;table&gt;</span><br><span class="line"></span><br><span class="line">    &lt;&#x2F;context&gt;</span><br><span class="line">&lt;&#x2F;generatorConfiguration&gt;</span><br></pre></td></tr></table></figure>
+<p>4.运行MyBatis Generator的启动类GeneratorDisplay。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">package com.phd.mybatis.util;</span><br><span class="line"></span><br><span class="line">import org.mybatis.generator.api.MyBatisGenerator;</span><br><span class="line">import org.mybatis.generator.config.Configuration;</span><br><span class="line">import org.mybatis.generator.config.xml.ConfigurationParser;</span><br><span class="line">import org.mybatis.generator.internal.DefaultShellCallback;</span><br><span class="line"></span><br><span class="line">import java.io.File;</span><br><span class="line">import java.util.ArrayList;</span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">public class GeneratorDisplay &#123;</span><br><span class="line"></span><br><span class="line">	public void generator() throws Exception &#123;</span><br><span class="line"></span><br><span class="line">		List&lt;String&gt; warnings &#x3D; new ArrayList&lt;String&gt;();</span><br><span class="line">		boolean overwrite &#x3D; true;</span><br><span class="line">		&#x2F;&#x2F;指定 逆向工程配置文件</span><br><span class="line">		File configFile &#x3D; new File(&quot;generatorConfig.xml&quot;);</span><br><span class="line">		ConfigurationParser cp &#x3D; new ConfigurationParser(warnings);</span><br><span class="line">		Configuration config &#x3D; cp.parseConfiguration(configFile);</span><br><span class="line">		DefaultShellCallback callback &#x3D; new DefaultShellCallback(overwrite);</span><br><span class="line">		MyBatisGenerator myBatisGenerator &#x3D; new MyBatisGenerator(config,</span><br><span class="line">				callback, warnings);</span><br><span class="line">		myBatisGenerator.generate(null);</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public static void main(String[] args) throws Exception &#123;</span><br><span class="line">		try &#123;</span><br><span class="line">			GeneratorDisplay generatorSqlmap &#x3D; new GeneratorDisplay();</span><br><span class="line">			generatorSqlmap.generator();</span><br><span class="line">		&#125; catch (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>5.生成相应的实体类，mapper接口以及对应的XML文件。</p>
+<img src="/2020/11/01/MyBatis-Generator%E6%95%B0%E6%8D%AE%E5%BA%93%E9%80%86%E5%90%91%E7%94%9F%E6%88%90/MBG-result.png" class="">
+
+<p>注：参考通用mapper作者，传送门–<a target="_blank" rel="noopener" href="https://github.com/abel533/Mapper/wiki/4.1.mappergenerator">通用Mapper专用代码生成器</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/10/28/%E8%81%9A%E5%90%88%E5%B7%A5%E7%A8%8B%E6%95%B4%E5%90%88SpringBoot/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="PD">
+      <meta itemprop="description" content="Cream rises to the top.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/28/%E8%81%9A%E5%90%88%E5%B7%A5%E7%A8%8B%E6%95%B4%E5%90%88SpringBoot/" class="post-title-link" itemprop="url">聚合工程整合SpringBoot</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-10-28 10:24:15" itemprop="dateCreated datePublished" datetime="2020-10-28T10:24:15+08:00">2020-10-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-02-21 19:32:38" itemprop="dateModified" datetime="2021-02-21T19:32:38+08:00">2021-02-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%8D%95%E4%BD%93%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">单体架构</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="聚合工程"><a href="#聚合工程" class="headerlink" title="聚合工程"></a>聚合工程</h2><p>1.聚合工程里可以分为顶级项目（顶级工程、父工程）与子工程，这两者的关系其实就是父子继承的关系，子工程在maven里称之为模块（module），模块之间是平级，是可以相互依赖的；<br>2.子模块可以使用顶级工程里所有的资源（依赖），子模块之间如果要使用资源，必须构建依赖（构建关系）；<br>3.一个顶级工程是可以由多个不同的子工程共同组合而成。</p>
+<h2 id="聚合工程的好处"><a href="#聚合工程的好处" class="headerlink" title="聚合工程的好处"></a>聚合工程的好处</h2><p>1.互相解耦，拆分方便。<br>2.复用性高。  </p>
+<blockquote>
+<p>注意：<br>顶级工程项目的pom中一定要设置pom， 不设置默认是打jar包。  </p>
+</blockquote>
+<p>工程目录如下图：  </p>
+<img src="/2020/10/28/%E8%81%9A%E5%90%88%E5%B7%A5%E7%A8%8B%E6%95%B4%E5%90%88SpringBoot/aggregation.png" class="" title="This is an aggregation image">
+
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><p>顶级工程pom文件：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;project xmlns&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0&quot;</span><br><span class="line">         xmlns:xsi&#x3D;&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2001&#x2F;XMLSchema-instance&quot;</span><br><span class="line">         xsi:schemaLocation&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0 http:&#x2F;&#x2F;maven.apache.org&#x2F;xsd&#x2F;maven-4.0.0.xsd&quot;&gt;</span><br><span class="line">    &lt;modelVersion&gt;4.0.0&lt;&#x2F;modelVersion&gt;</span><br><span class="line"></span><br><span class="line">    &lt;groupId&gt;com.phd&lt;&#x2F;groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;foodie&lt;&#x2F;artifactId&gt;</span><br><span class="line">    &lt;packaging&gt;pom&lt;&#x2F;packaging&gt;</span><br><span class="line">    &lt;version&gt;1.0-SNAPSHOT&lt;&#x2F;version&gt;</span><br><span class="line">    &lt;modules&gt;</span><br><span class="line">        &lt;module&gt;foodie-api&lt;&#x2F;module&gt;</span><br><span class="line">        &lt;module&gt;foodie-service&lt;&#x2F;module&gt;</span><br><span class="line">        &lt;module&gt;foodie-mapper&lt;&#x2F;module&gt;</span><br><span class="line">        &lt;module&gt;foodie-pojo&lt;&#x2F;module&gt;</span><br><span class="line">        &lt;module&gt;foodie-common&lt;&#x2F;module&gt;</span><br><span class="line">    &lt;&#x2F;modules&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &lt;parent&gt;</span><br><span class="line">        &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;spring-boot-starter-parent&lt;&#x2F;artifactId&gt;</span><br><span class="line">        &lt;version&gt;2.3.2.RELEASE&lt;&#x2F;version&gt;</span><br><span class="line">    &lt;&#x2F;parent&gt;</span><br><span class="line"></span><br><span class="line">    &lt;properties&gt;</span><br><span class="line">        &lt;project.build.sourceEncoding&gt;UTF-8&lt;&#x2F;project.build.sourceEncoding&gt;</span><br><span class="line">        &lt;project.reporting.outputEncoding&gt;UTF-8&lt;&#x2F;project.reporting.outputEncoding&gt;</span><br><span class="line">        &lt;java.version&gt;1.8&lt;&#x2F;java.version&gt;</span><br><span class="line">    &lt;&#x2F;properties&gt;</span><br><span class="line"></span><br><span class="line">    &lt;dependencies&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter&lt;&#x2F;artifactId&gt;</span><br><span class="line">        &lt;&#x2F;dependency&gt;</span><br><span class="line"></span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter-web&lt;&#x2F;artifactId&gt;</span><br><span class="line">        &lt;&#x2F;dependency&gt;</span><br><span class="line">    &lt;&#x2F;dependencies&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;&#x2F;project&gt;</span><br></pre></td></tr></table></figure>
+<p>子工程api层pom文件：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;project xmlns&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0&quot;</span><br><span class="line">         xmlns:xsi&#x3D;&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2001&#x2F;XMLSchema-instance&quot;</span><br><span class="line">         xsi:schemaLocation&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0 http:&#x2F;&#x2F;maven.apache.org&#x2F;xsd&#x2F;maven-4.0.0.xsd&quot;&gt;</span><br><span class="line">    &lt;parent&gt;</span><br><span class="line">        &lt;artifactId&gt;foodie&lt;&#x2F;artifactId&gt;</span><br><span class="line">        &lt;groupId&gt;com.phd&lt;&#x2F;groupId&gt;</span><br><span class="line">        &lt;version&gt;1.0-SNAPSHOT&lt;&#x2F;version&gt;</span><br><span class="line">    &lt;&#x2F;parent&gt;</span><br><span class="line">    &lt;modelVersion&gt;4.0.0&lt;&#x2F;modelVersion&gt;</span><br><span class="line"></span><br><span class="line">    &lt;artifactId&gt;foodie-api&lt;&#x2F;artifactId&gt;</span><br><span class="line"></span><br><span class="line">    &lt;dependencies&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;com.phd&lt;&#x2F;groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;foodie-service&lt;&#x2F;artifactId&gt;</span><br><span class="line">            &lt;version&gt;1.0-SNAPSHOT&lt;&#x2F;version&gt;</span><br><span class="line">        &lt;&#x2F;dependency&gt;</span><br><span class="line">    &lt;&#x2F;dependencies&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;&#x2F;project&gt;</span><br></pre></td></tr></table></figure>
+<p>子工程service层pom文件：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;project xmlns&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0&quot;</span><br><span class="line">         xmlns:xsi&#x3D;&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2001&#x2F;XMLSchema-instance&quot;</span><br><span class="line">         xsi:schemaLocation&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0 http:&#x2F;&#x2F;maven.apache.org&#x2F;xsd&#x2F;maven-4.0.0.xsd&quot;&gt;</span><br><span class="line">    &lt;parent&gt;</span><br><span class="line">        &lt;artifactId&gt;foodie&lt;&#x2F;artifactId&gt;</span><br><span class="line">        &lt;groupId&gt;com.phd&lt;&#x2F;groupId&gt;</span><br><span class="line">        &lt;version&gt;1.0-SNAPSHOT&lt;&#x2F;version&gt;</span><br><span class="line">    &lt;&#x2F;parent&gt;</span><br><span class="line">    &lt;modelVersion&gt;4.0.0&lt;&#x2F;modelVersion&gt;</span><br><span class="line"></span><br><span class="line">    &lt;artifactId&gt;foodie-service&lt;&#x2F;artifactId&gt;</span><br><span class="line"></span><br><span class="line">    &lt;dependencies&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;com.phd&lt;&#x2F;groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;foodie-mapper&lt;&#x2F;artifactId&gt;</span><br><span class="line">            &lt;version&gt;1.0-SNAPSHOT&lt;&#x2F;version&gt;</span><br><span class="line">        &lt;&#x2F;dependency&gt;</span><br><span class="line">    &lt;&#x2F;dependencies&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;&#x2F;project&gt;</span><br></pre></td></tr></table></figure>
+<p>子工程mapper层pom文件：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;project xmlns&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0&quot;</span><br><span class="line">         xmlns:xsi&#x3D;&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2001&#x2F;XMLSchema-instance&quot;</span><br><span class="line">         xsi:schemaLocation&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0 http:&#x2F;&#x2F;maven.apache.org&#x2F;xsd&#x2F;maven-4.0.0.xsd&quot;&gt;</span><br><span class="line">    &lt;parent&gt;</span><br><span class="line">        &lt;artifactId&gt;foodie&lt;&#x2F;artifactId&gt;</span><br><span class="line">        &lt;groupId&gt;com.phd&lt;&#x2F;groupId&gt;</span><br><span class="line">        &lt;version&gt;1.0-SNAPSHOT&lt;&#x2F;version&gt;</span><br><span class="line">    &lt;&#x2F;parent&gt;</span><br><span class="line">    &lt;modelVersion&gt;4.0.0&lt;&#x2F;modelVersion&gt;</span><br><span class="line"></span><br><span class="line">    &lt;artifactId&gt;foodie-mapper&lt;&#x2F;artifactId&gt;</span><br><span class="line"></span><br><span class="line">    &lt;dependencies&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;com.phd&lt;&#x2F;groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;foodie-pojo&lt;&#x2F;artifactId&gt;</span><br><span class="line">            &lt;version&gt;1.0-SNAPSHOT&lt;&#x2F;version&gt;</span><br><span class="line">        &lt;&#x2F;dependency&gt;</span><br><span class="line">    &lt;&#x2F;dependencies&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;&#x2F;project&gt;</span><br></pre></td></tr></table></figure>
+<p>子工程实体层pom文件：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;project xmlns&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0&quot;</span><br><span class="line">         xmlns:xsi&#x3D;&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2001&#x2F;XMLSchema-instance&quot;</span><br><span class="line">         xsi:schemaLocation&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0 http:&#x2F;&#x2F;maven.apache.org&#x2F;xsd&#x2F;maven-4.0.0.xsd&quot;&gt;</span><br><span class="line">    &lt;parent&gt;</span><br><span class="line">        &lt;artifactId&gt;foodie&lt;&#x2F;artifactId&gt;</span><br><span class="line">        &lt;groupId&gt;com.phd&lt;&#x2F;groupId&gt;</span><br><span class="line">        &lt;version&gt;1.0-SNAPSHOT&lt;&#x2F;version&gt;</span><br><span class="line">    &lt;&#x2F;parent&gt;</span><br><span class="line">    &lt;modelVersion&gt;4.0.0&lt;&#x2F;modelVersion&gt;</span><br><span class="line"></span><br><span class="line">    &lt;artifactId&gt;foodie-pojo&lt;&#x2F;artifactId&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;&#x2F;project&gt;</span><br></pre></td></tr></table></figure>
+<p>子工程common模块pom文件：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;project xmlns&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0&quot;</span><br><span class="line">         xmlns:xsi&#x3D;&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2001&#x2F;XMLSchema-instance&quot;</span><br><span class="line">         xsi:schemaLocation&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0 http:&#x2F;&#x2F;maven.apache.org&#x2F;xsd&#x2F;maven-4.0.0.xsd&quot;&gt;</span><br><span class="line">    &lt;parent&gt;</span><br><span class="line">        &lt;artifactId&gt;foodie&lt;&#x2F;artifactId&gt;</span><br><span class="line">        &lt;groupId&gt;com.phd&lt;&#x2F;groupId&gt;</span><br><span class="line">        &lt;version&gt;1.0-SNAPSHOT&lt;&#x2F;version&gt;</span><br><span class="line">    &lt;&#x2F;parent&gt;</span><br><span class="line">    &lt;modelVersion&gt;4.0.0&lt;&#x2F;modelVersion&gt;</span><br><span class="line"></span><br><span class="line">    &lt;artifactId&gt;foodie-common&lt;&#x2F;artifactId&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;&#x2F;project&gt;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+  </nav>
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">PD</p>
+  <div class="site-description" itemprop="description">Cream rises to the top.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">PD</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
