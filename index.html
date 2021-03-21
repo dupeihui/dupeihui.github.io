@@ -162,6 +162,93 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/21/Eureka%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="PD">
+      <meta itemprop="description" content="Cream rises to the top.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/03/21/Eureka%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/" class="post-title-link" itemprop="url">Eureka核心概念</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-03-21 19:34:21 / 修改时间：23:19:24" itemprop="dateCreated datePublished" datetime="2021-03-21T19:34:21+08:00">2021-03-21</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">微服务架构</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Eureka简介"><a href="#Eureka简介" class="headerlink" title="Eureka简介"></a>Eureka简介</h2><p>Eureka是Netflix开源的服务发现框架，本身是一个基于REST的服务，主要用于定位运行在AWS域中的中间层服务，以达到负载均衡和中间层服务故障转移的目的。SpringCloud将它集成在其子项目spring-cloud-netflix中，以实现SpringCloud的服务发现功能。</p>
+<img src="/2021/03/21/Eureka%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/eureka-arch.jpeg" class="">
+
+<h2 id="注册中心搭建"><a href="#注册中心搭建" class="headerlink" title="注册中心搭建"></a>注册中心搭建</h2><h3 id="添加maven依赖"><a href="#添加maven依赖" class="headerlink" title="添加maven依赖"></a>添加maven依赖</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.cloud&lt;&#x2F;groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-cloud-starter-netflix-eureka-server&lt;&#x2F;artifactId&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="启动类添加注解-EnableEurekaServer"><a href="#启动类添加注解-EnableEurekaServer" class="headerlink" title="启动类添加注解@EnableEurekaServer"></a>启动类添加注解@EnableEurekaServer</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">package com.example.springcloud;</span><br><span class="line"></span><br><span class="line">import org.springframework.boot.SpringApplication;</span><br><span class="line">import org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line">import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;</span><br><span class="line"></span><br><span class="line">@EnableEurekaServer</span><br><span class="line">@SpringBootApplication</span><br><span class="line">public class EurekaServerApplication &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        SpringApplication.run(EurekaServerApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="application-properties添加配置"><a href="#application-properties添加配置" class="headerlink" title="application.properties添加配置"></a>application.properties添加配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">spring.application.name&#x3D;eureka-server</span><br><span class="line">server.port&#x3D;20000</span><br><span class="line">eureka.instance.hostname&#x3D;localhost</span><br><span class="line"># 是否注册到eureka，默认true</span><br><span class="line">eureka.client.register-with-eureka&#x3D;false</span><br><span class="line"># 是否从eureka获取注册信息，默认true</span><br><span class="line">eureka.client.fetch-registry&#x3D;false</span><br></pre></td></tr></table></figure>
+<h2 id="客户端搭建"><a href="#客户端搭建" class="headerlink" title="客户端搭建"></a>客户端搭建</h2><h3 id="添加maven依赖-1"><a href="#添加maven依赖-1" class="headerlink" title="添加maven依赖"></a>添加maven依赖</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.cloud&lt;&#x2F;groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-cloud-starter-netflix-eureka-client&lt;&#x2F;artifactId&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="启动类添加注解-EnableDiscoveryClient"><a href="#启动类添加注解-EnableDiscoveryClient" class="headerlink" title="启动类添加注解@EnableDiscoveryClient"></a>启动类添加注解@EnableDiscoveryClient</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">package com.example.springcloud;</span><br><span class="line"></span><br><span class="line">import org.springframework.boot.SpringApplication;</span><br><span class="line">import org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line">import org.springframework.cloud.client.discovery.EnableDiscoveryClient;</span><br><span class="line"></span><br><span class="line">@SpringBootApplication</span><br><span class="line">@EnableDiscoveryClient</span><br><span class="line">public class EurekaClientApplication &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        SpringApplication.run(EurekaClientApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="application-properties添加配置-1"><a href="#application-properties添加配置-1" class="headerlink" title="application.properties添加配置"></a>application.properties添加配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">spring.application.name&#x3D;eureka-client</span><br><span class="line">server.port&#x3D;30002</span><br><span class="line">eureka.client.service-url.defaultZone&#x3D;http:&#x2F;&#x2F;localhost:20000&#x2F;eureka&#x2F;</span><br></pre></td></tr></table></figure>
+<img src="/2021/03/21/Eureka%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/eureka.png" class="">
+
+<h2 id="服务注册"><a href="#服务注册" class="headerlink" title="服务注册"></a>服务注册</h2><p>Eureka整体上分为两个主体：Eureka Server和Eureka Client，Eureka Server是注册中心，Eureka Client既可以是服务提供者（Service Provider），也可以是服务消费者（Service Consumer）。Eureka Client启动时会向注册中心发送信息，它提供自身的元数据，比如IP地址、端口服务名、运行状况等。Eureka Server接受客户端信息，更新服务列表。</p>
+<h2 id="心跳检测"><a href="#心跳检测" class="headerlink" title="心跳检测"></a>心跳检测</h2><p>由Eureka Client定时发起，Client通过renew机制频繁的向Server发送消息，通知Server它还活着，不要将其从服务列表中剔除。</p>
+<h2 id="服务续约"><a href="#服务续约" class="headerlink" title="服务续约"></a>服务续约</h2><p>在注册服务完成以后，服务提供者会维持一个心跳（定时向Eureka Server发起rest 请求），告诉Eureka Server：“我还活着”。这个我们称为服务续约（renew）。有两个重要的参数可以修改服务续约的行为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 每隔5秒钟，向服务中心发送一条续约指令。默认30秒</span><br><span class="line">eureka.instance.lease-renewal-interval-in-seconds&#x3D;5</span><br><span class="line"></span><br><span class="line"># 如果10秒内，依然没有收到续约请求，判定服务过期。默认90秒</span><br><span class="line">eureka.instance.lease-expiration-duration-in-seconds&#x3D;10</span><br></pre></td></tr></table></figure>
+<h2 id="服务剔除"><a href="#服务剔除" class="headerlink" title="服务剔除"></a>服务剔除</h2><p>由Server端定时发起，Eureka Server在启动的时候会创建一个定时任务，每隔60秒就去将当前服务列表中超过90秒还没续约的服务剔除出去，通过这种方式来避免服务消费者调用了一个无效的服务。有一个重要的参数可以修改服务剔除的行为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 每隔10秒触发一次服务剔除。默认60秒</span><br><span class="line">eureka.server.eviction-interval-timer-in-ms&#x3D;10000</span><br></pre></td></tr></table></figure>
+<h2 id="服务自保"><a href="#服务自保" class="headerlink" title="服务自保"></a>服务自保</h2><p>默认情况下，如果Eureka Server每隔60秒就去将当前服务列表中超过90秒还没续约的服务剔除出去，但是在微服务架构下服务之间通常都是跨进程调用，网络通信往往会面临着各种问题，比如微服务状态正常，网络分区故障，导致此实例被注销。固定时间内大量实例被注销，可能会严重威胁整个微服务架构的可用性。为了解决这个问题，Eureka 开发了自我保护机制，那么什么是自我保护机制呢？<br>Eureka Server 在运行期间会去统计心跳失败比例在 15 分钟之内是否低于 85%，如果低于 85%，Eureka Server 即会进入自我保护机制。<br>Eureka 自我保护机制是为了防止误杀服务而提供的一个机制。当个别客户端出现心跳失联时，则认为是客户端的问题，剔除掉客户端；当 Eureka 捕获到大量的心跳失败时，则认为可能是网络问题，进入自我保护机制；当客户端心跳恢复时，Eureka 会自动退出自我保护机制。<br>与服务自保相关的配置参数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 强制关闭服务自保（自动开关不起作用）</span><br><span class="line">eureka.server.enable-self-preservation&#x3D;false</span><br></pre></td></tr></table></figure>
+<h2 id="服务下线"><a href="#服务下线" class="headerlink" title="服务下线"></a>服务下线</h2><p>服务提供者在运行的过程中可能会发生关闭或者重启，当服务进行正常关闭时，它会触发一个服务下线的REST请求给Eureka Server，告诉服务注册中心我要下线了，服务注册中心收到请求之后，将该服务状态置为DOWN，表示服务已下线，并将该事件传播出去，这样就可以避免服务消费者调用了一个已经下线的服务提供者了。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/07/git%E7%9F%A5%E8%AF%86%E5%9B%9E%E9%A1%BE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1191,88 +1278,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/01/redis%E5%93%A8%E5%85%B5%E6%9C%BA%E5%88%B6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="PD">
-      <meta itemprop="description" content="Cream rises to the top.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/01/01/redis%E5%93%A8%E5%85%B5%E6%9C%BA%E5%88%B6/" class="post-title-link" itemprop="url">redis哨兵机制</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-01-01 13:21:40" itemprop="dateCreated datePublished" datetime="2021-01-01T13:21:40+08:00">2021-01-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-02-23 21:22:49" itemprop="dateModified" datetime="2021-02-23T21:22:49+08:00">2021-02-23</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">集群架构</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="简单介绍"><a href="#简单介绍" class="headerlink" title="简单介绍"></a>简单介绍</h2><p>Redis Sentinel为Redis提供了高可用，这意味着使用Sentinel可以创建部署，该部署可以在无需人工干预的情况下抵抗某些类型的故障，如主从模式下master节点服务器宕机。<br>Redis Sentinel还提供了附带任务，如：监控、通知、为客户端充当配置提供者。<br>这是宏观上Sentinel功能的完整列表：  </p>
-<ul>
-<li>监控：Sentinel会不断的检查主实例和从实例是否按预期工作。</li>
-<li>通知：Sentinel可以通过API通知系统管理员或其他计算机程序，其中一个受监控的Redis实例出了问题。</li>
-<li>自动故障转移：如果主服务未按预期工作，则Sentinel可以启动故障转移过程，在该过程中将其中一个从服务升级为主服务，其他从服务重新配置新主服务的地址，使用Redis服务的应用程序在连接时被通知使用新主服务的地址。  </li>
-<li>配置提供者：Sentinel充当客户端服务发现的授权来源：客户端连接到Sentinels，以询问负责给定服务的当前Redis主服务的地址。如果发生故障转移，Sentinel将报告新地址。</li>
-</ul>
-<h2 id="Sentinel配置"><a href="#Sentinel配置" class="headerlink" title="Sentinel配置"></a>Sentinel配置</h2><p>Redis源发行版包含一个名为sentinel.conf的文件，该文件是一个自说明性的示例配置文件，可用于配置Sentinel，但是典型的最小配置文件如下所示：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># sentinel monitor &lt;master-group-name&gt; &lt;ip&gt; &lt;port&gt; &lt;quorum&gt;</span><br><span class="line"># sentinel监控一个名为mymaster的主服务器，该主服务器地址和端口为127.0.0.1和6379，quorum为触发客观下线的数量</span><br><span class="line">sentinel monitor mymaster 127.0.0.1 6379 2</span><br><span class="line"></span><br><span class="line"># master最长响应时间，超过这个时间就主观判断它下线，默认60秒</span><br><span class="line">sentinel down-after-milliseconds mymaster 60000</span><br><span class="line"></span><br><span class="line"># 执行故障转移的最大等待时间，默认3分钟</span><br><span class="line">sentinel failover-timeout mymaster 180000</span><br><span class="line"></span><br><span class="line"># 用于限制主从切换之后，最多的并行同步数据的从节点数量</span><br><span class="line">sentinel parallel-syncs mymaster 1</span><br></pre></td></tr></table></figure>
-<h2 id="运行Sentinel"><a href="#运行Sentinel" class="headerlink" title="运行Sentinel"></a>运行Sentinel</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-sentinel &#x2F;path&#x2F;to&#x2F;sentinel.conf</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1342,20 +1347,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-count">27</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">16</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
