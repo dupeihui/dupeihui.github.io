@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Ribbon简介：Spring Cloud Ribbon是一个基于HTTP和TCP的客户端负载均衡工具，它基于Netflix Ribbon实现。通过Spring Cloud的封装，可以让我们轻松地将面向服务的REST模版请求自动转换成客户端负载均衡的服务调用。Spring Cloud Ribbon虽然只是一个工具类框架，它不像服务注册中心、配置中心、API网关那样需要独立部署，但是它几乎存在于每一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ribbon的七种负载均衡策略">
+<meta property="og:url" content="http://example.com/2021/03/22/Ribbon%E7%9A%84%E4%B8%83%E7%A7%8D%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%AD%96%E7%95%A5/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Ribbon简介：Spring Cloud Ribbon是一个基于HTTP和TCP的客户端负载均衡工具，它基于Netflix Ribbon实现。通过Spring Cloud的封装，可以让我们轻松地将面向服务的REST模版请求自动转换成客户端负载均衡的服务调用。Spring Cloud Ribbon虽然只是一个工具类框架，它不像服务注册中心、配置中心、API网关那样需要独立部署，但是它几乎存在于每一">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-03-22T12:49:35.000Z">
+<meta property="article:modified_time" content="2021-03-22T14:42:48.924Z">
+<meta property="article:author" content="PD">
+<meta property="article:tag" content="Spring Cloud">
+<meta property="article:tag" content="Ribbon">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2021/03/22/Ribbon%E7%9A%84%E4%B8%83%E7%A7%8D%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%AD%96%E7%95%A5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Ribbon的七种负载均衡策略 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/22/Ribbon%E7%9A%84%E4%B8%83%E7%A7%8D%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%AD%96%E7%95%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="PD">
+      <meta itemprop="description" content="Cream rises to the top.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Ribbon的七种负载均衡策略
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-03-22 20:49:35 / 修改时间：22:42:48" itemprop="dateCreated datePublished" datetime="2021-03-22T20:49:35+08:00">2021-03-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">微服务架构</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Ribbon简介：Spring Cloud Ribbon是一个基于HTTP和TCP的客户端负载均衡工具，它基于Netflix Ribbon实现。通过Spring Cloud的封装，可以让我们轻松地将面向服务的REST模版请求自动转换成客户端负载均衡的服务调用。Spring Cloud Ribbon虽然只是一个工具类框架，它不像服务注册中心、配置中心、API网关那样需要独立部署，但是它几乎存在于每一个Spring Cloud构建的微服务和基础设施中。因为微服务间的调用，API网关的请求转发等内容，实际上都是通过Ribbon来实现的，包括Feign，它也是基于Ribbon实现的工具。所以，对Spring Cloud Ribbon的理解和使用，对于我们使用Spring Cloud来构建微服务非常重要。本文将介绍Ribbon的七种负载均衡策略。</p>
+<h2 id="RandomRule"><a href="#RandomRule" class="headerlink" title="RandomRule"></a>RandomRule</h2><p>顾名思义，随机访问。</p>
+<h2 id="RoundRobinRule"><a href="#RoundRobinRule" class="headerlink" title="RoundRobinRule"></a>RoundRobinRule</h2><p>顾名思义，轮训访问。<br>这里有个疑问，在多线程环境下，两个请求同时访问这个Rule是否会读取到相同节点呢？答案是不会，这靠的是RoundRobinRule底部的自旋锁+CAS的同步操作。CAS全称是compare and swap，是一种借助操作系统函数来实现的同步操作。CAS+自旋锁这套组合技是高并发下最廉价的线程安全手段，因为这套操作不需要锁定系统资源。当然了，有优点必然也有缺点，自旋锁如果迟迟不能释放，将会带来CPU资源的浪费，因为自旋本身并不会执行任何业务逻辑，而是单纯的使CPU“空转”。所以通常情况下会对自旋锁的旋转次数做一个限制，比如JDK中synchronize底层的锁升级策略，就对自旋次数做了动态调整。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">public Server choose(ILoadBalancer lb, Object key) &#123;</span><br><span class="line">    if (lb &#x3D;&#x3D; null) &#123;</span><br><span class="line">        log.warn(&quot;no load balancer&quot;);</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Server server &#x3D; null;</span><br><span class="line">    int count &#x3D; 0;</span><br><span class="line">    while (server &#x3D;&#x3D; null &amp;&amp; count++ &lt; 10) &#123;</span><br><span class="line">        List&lt;Server&gt; reachableServers &#x3D; lb.getReachableServers();</span><br><span class="line">        List&lt;Server&gt; allServers &#x3D; lb.getAllServers();</span><br><span class="line">        int upCount &#x3D; reachableServers.size();</span><br><span class="line">        int serverCount &#x3D; allServers.size();</span><br><span class="line"></span><br><span class="line">        if ((upCount &#x3D;&#x3D; 0) || (serverCount &#x3D;&#x3D; 0)) &#123;</span><br><span class="line">            log.warn(&quot;No up servers available from load balancer: &quot; + lb);</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        int nextServerIndex &#x3D; incrementAndGetModulo(serverCount);</span><br><span class="line">        server &#x3D; allServers.get(nextServerIndex);</span><br><span class="line"></span><br><span class="line">        if (server &#x3D;&#x3D; null) &#123;</span><br><span class="line">            &#x2F;* Transient. *&#x2F;</span><br><span class="line">            Thread.yield();</span><br><span class="line">            continue;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (server.isAlive() &amp;&amp; (server.isReadyToServe())) &#123;</span><br><span class="line">            return (server);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; Next.</span><br><span class="line">        server &#x3D; null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (count &gt;&#x3D; 10) &#123;</span><br><span class="line">        log.warn(&quot;No available alive servers after 10 tries from load balancer: &quot;</span><br><span class="line">                + lb);</span><br><span class="line">    &#125;</span><br><span class="line">    return server;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private int incrementAndGetModulo(int modulo) &#123;</span><br><span class="line">    for (;;) &#123;</span><br><span class="line">        int current &#x3D; nextServerCyclicCounter.get();</span><br><span class="line">        int next &#x3D; (current + 1) % modulo;</span><br><span class="line">        if (nextServerCyclicCounter.compareAndSet(current, next))</span><br><span class="line">            return next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="RetryRule"><a href="#RetryRule" class="headerlink" title="RetryRule"></a>RetryRule</h2><p>该策略实现了一个具备重试机制的实例选择功能。从源码中可以看出，内部定义了一个IRule对象，默认是RoundRobinRule实例，choose方法中则实现了对内部定义的策略进行反复尝试的策略，若期间能够选择到具体的服务实例就返回，若选择不到并且超过设置的尝试结束时间(maxRetryMillis参数定义的值 + choose方法开始执行的时间戳)就返回null。</p>
+<h2 id="WeightedResponseTimeRule"><a href="#WeightedResponseTimeRule" class="headerlink" title="WeightedResponseTimeRule"></a>WeightedResponseTimeRule</h2><p>这个Rule继承自RoundRibbonRule，他会根据服务节点的响应时间计算权重，响应时间越长权重就越低，响应越快则权重越高，权重的高低决定了机器被选中概率的高低。也就是说，响应时间越小的机器，被选中的概率越大。由于服务器刚启动的时候，对各个服务节点采样不足，因此会采用轮询策略，当积累到一定的样本时候，会切换到WeightedResponseTimeRule模式。<br>这种策略适合重量级接口，尤其是根据参数不同会导致系统资源使用率浮动较大的接口（响应时间和业务复杂度线性相关）。<br>假设某个接口比较重量级，接口的处理时间与接收到的参数强相关。打个比方，订单导出服务，如果发起10个请求，每个请求都需要导出当前用户过去一整年的订单数据，那么这10个请求都会耗费大量的系统资源（CPU，内存）参与业务，同时响应时间也会相应拉长。在另一台机子上，同样是10个请求，但是只需要导出1个月的数据，相比较第一台机器，连接数相等的情况下，系统资源的占用率却大大不同。</p>
+<h2 id="BestAvailableRule"><a href="#BestAvailableRule" class="headerlink" title="BestAvailableRule"></a>BestAvailableRule</h2><p>在过滤掉故障服务以后，它会基于过去30分钟的统计结果选取当前并发量最小的服务节点，也就是最“闲”的节点作为目标地址。如果统计结果尚未生成，则采用轮询的方式选定节点。<br>这种策略适合对响应时间较短，或者说响应时间和业务复杂度是非线性相关的接口。</p>
+<h2 id="AvailabilityFilteringRule"><a href="#AvailabilityFilteringRule" class="headerlink" title="AvailabilityFilteringRule"></a>AvailabilityFilteringRule</h2><p>这个规则底层依赖RandomRobinRule来选取节点，但并非来者不拒，它也是有一些底线的，必须要满足它的最低要求的节点才会被选中。如果节点满足了要求，无论其响应时间或者当前并发量是什么，都会被选中。每次AvailabilityFilteringRule（简称AFR）都会请求RandomRobinRule挑选一个节点，然后对这个节点做以下两步检查：</p>
+<ul>
+<li>是否处于熔断状态</li>
+<li>节点当前的active请求连接数超过阈值，超过了则表示节点负载过高  </li>
+</ul>
+<p>如果被选中的server不幸挂掉了检查，那么AFR会自动重试（次数最多10次），让RobinRule重新选择一个服务节点。</p>
+<h2 id="ZoneAvoidanceRule"><a href="#ZoneAvoidanceRule" class="headerlink" title="ZoneAvoidanceRule"></a>ZoneAvoidanceRule</h2><p>这个过滤器包含了组合过滤条件，分别是Zone级别和可用性级别。  </p>
+<ul>
+<li>Zone Filter: 在Eureka注册中一个服务节点有Zone, Region和URL三个身份信息，其中Zone可以理解为机房大区（未指定则由Eureka给定默认值），而这里会对这个Zone的健康情况过滤其下面所有服务节点。</li>
+<li>可用性过滤：这里和AvailabilityFilteringRule的验证非常像，会过滤掉当前并发量较大，或者处于熔断状态的服务节点。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Spring-Cloud/" rel="tag"># Spring Cloud</a>
+              <a href="/tags/Ribbon/" rel="tag"># Ribbon</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/03/21/Eureka%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/" rel="prev" title="Eureka核心概念">
+      <i class="fa fa-chevron-left"></i> Eureka核心概念
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#RandomRule"><span class="nav-number">1.</span> <span class="nav-text">RandomRule</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RoundRobinRule"><span class="nav-number">2.</span> <span class="nav-text">RoundRobinRule</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RetryRule"><span class="nav-number">3.</span> <span class="nav-text">RetryRule</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WeightedResponseTimeRule"><span class="nav-number">4.</span> <span class="nav-text">WeightedResponseTimeRule</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BestAvailableRule"><span class="nav-number">5.</span> <span class="nav-text">BestAvailableRule</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AvailabilityFilteringRule"><span class="nav-number">6.</span> <span class="nav-text">AvailabilityFilteringRule</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ZoneAvoidanceRule"><span class="nav-number">7.</span> <span class="nav-text">ZoneAvoidanceRule</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">PD</p>
+  <div class="site-description" itemprop="description">Cream rises to the top.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">PD</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

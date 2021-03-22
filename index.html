@@ -162,6 +162,248 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/22/Ribbon%E7%9A%84%E4%B8%83%E7%A7%8D%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%AD%96%E7%95%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="PD">
+      <meta itemprop="description" content="Cream rises to the top.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/03/22/Ribbon%E7%9A%84%E4%B8%83%E7%A7%8D%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%AD%96%E7%95%A5/" class="post-title-link" itemprop="url">Ribbon的七种负载均衡策略</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-03-22 20:49:35 / 修改时间：22:42:48" itemprop="dateCreated datePublished" datetime="2021-03-22T20:49:35+08:00">2021-03-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">微服务架构</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Ribbon简介：Spring Cloud Ribbon是一个基于HTTP和TCP的客户端负载均衡工具，它基于Netflix Ribbon实现。通过Spring Cloud的封装，可以让我们轻松地将面向服务的REST模版请求自动转换成客户端负载均衡的服务调用。Spring Cloud Ribbon虽然只是一个工具类框架，它不像服务注册中心、配置中心、API网关那样需要独立部署，但是它几乎存在于每一个Spring Cloud构建的微服务和基础设施中。因为微服务间的调用，API网关的请求转发等内容，实际上都是通过Ribbon来实现的，包括Feign，它也是基于Ribbon实现的工具。所以，对Spring Cloud Ribbon的理解和使用，对于我们使用Spring Cloud来构建微服务非常重要。本文将介绍Ribbon的七种负载均衡策略。</p>
+<h2 id="RandomRule"><a href="#RandomRule" class="headerlink" title="RandomRule"></a>RandomRule</h2><p>顾名思义，随机访问。</p>
+<h2 id="RoundRobinRule"><a href="#RoundRobinRule" class="headerlink" title="RoundRobinRule"></a>RoundRobinRule</h2><p>顾名思义，轮训访问。<br>这里有个疑问，在多线程环境下，两个请求同时访问这个Rule是否会读取到相同节点呢？答案是不会，这靠的是RoundRobinRule底部的自旋锁+CAS的同步操作。CAS全称是compare and swap，是一种借助操作系统函数来实现的同步操作。CAS+自旋锁这套组合技是高并发下最廉价的线程安全手段，因为这套操作不需要锁定系统资源。当然了，有优点必然也有缺点，自旋锁如果迟迟不能释放，将会带来CPU资源的浪费，因为自旋本身并不会执行任何业务逻辑，而是单纯的使CPU“空转”。所以通常情况下会对自旋锁的旋转次数做一个限制，比如JDK中synchronize底层的锁升级策略，就对自旋次数做了动态调整。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">public Server choose(ILoadBalancer lb, Object key) &#123;</span><br><span class="line">    if (lb &#x3D;&#x3D; null) &#123;</span><br><span class="line">        log.warn(&quot;no load balancer&quot;);</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Server server &#x3D; null;</span><br><span class="line">    int count &#x3D; 0;</span><br><span class="line">    while (server &#x3D;&#x3D; null &amp;&amp; count++ &lt; 10) &#123;</span><br><span class="line">        List&lt;Server&gt; reachableServers &#x3D; lb.getReachableServers();</span><br><span class="line">        List&lt;Server&gt; allServers &#x3D; lb.getAllServers();</span><br><span class="line">        int upCount &#x3D; reachableServers.size();</span><br><span class="line">        int serverCount &#x3D; allServers.size();</span><br><span class="line"></span><br><span class="line">        if ((upCount &#x3D;&#x3D; 0) || (serverCount &#x3D;&#x3D; 0)) &#123;</span><br><span class="line">            log.warn(&quot;No up servers available from load balancer: &quot; + lb);</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        int nextServerIndex &#x3D; incrementAndGetModulo(serverCount);</span><br><span class="line">        server &#x3D; allServers.get(nextServerIndex);</span><br><span class="line"></span><br><span class="line">        if (server &#x3D;&#x3D; null) &#123;</span><br><span class="line">            &#x2F;* Transient. *&#x2F;</span><br><span class="line">            Thread.yield();</span><br><span class="line">            continue;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (server.isAlive() &amp;&amp; (server.isReadyToServe())) &#123;</span><br><span class="line">            return (server);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; Next.</span><br><span class="line">        server &#x3D; null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (count &gt;&#x3D; 10) &#123;</span><br><span class="line">        log.warn(&quot;No available alive servers after 10 tries from load balancer: &quot;</span><br><span class="line">                + lb);</span><br><span class="line">    &#125;</span><br><span class="line">    return server;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private int incrementAndGetModulo(int modulo) &#123;</span><br><span class="line">    for (;;) &#123;</span><br><span class="line">        int current &#x3D; nextServerCyclicCounter.get();</span><br><span class="line">        int next &#x3D; (current + 1) % modulo;</span><br><span class="line">        if (nextServerCyclicCounter.compareAndSet(current, next))</span><br><span class="line">            return next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="RetryRule"><a href="#RetryRule" class="headerlink" title="RetryRule"></a>RetryRule</h2><p>该策略实现了一个具备重试机制的实例选择功能。从源码中可以看出，内部定义了一个IRule对象，默认是RoundRobinRule实例，choose方法中则实现了对内部定义的策略进行反复尝试的策略，若期间能够选择到具体的服务实例就返回，若选择不到并且超过设置的尝试结束时间(maxRetryMillis参数定义的值 + choose方法开始执行的时间戳)就返回null。</p>
+<h2 id="WeightedResponseTimeRule"><a href="#WeightedResponseTimeRule" class="headerlink" title="WeightedResponseTimeRule"></a>WeightedResponseTimeRule</h2><p>这个Rule继承自RoundRibbonRule，他会根据服务节点的响应时间计算权重，响应时间越长权重就越低，响应越快则权重越高，权重的高低决定了机器被选中概率的高低。也就是说，响应时间越小的机器，被选中的概率越大。由于服务器刚启动的时候，对各个服务节点采样不足，因此会采用轮询策略，当积累到一定的样本时候，会切换到WeightedResponseTimeRule模式。<br>这种策略适合重量级接口，尤其是根据参数不同会导致系统资源使用率浮动较大的接口（响应时间和业务复杂度线性相关）。<br>假设某个接口比较重量级，接口的处理时间与接收到的参数强相关。打个比方，订单导出服务，如果发起10个请求，每个请求都需要导出当前用户过去一整年的订单数据，那么这10个请求都会耗费大量的系统资源（CPU，内存）参与业务，同时响应时间也会相应拉长。在另一台机子上，同样是10个请求，但是只需要导出1个月的数据，相比较第一台机器，连接数相等的情况下，系统资源的占用率却大大不同。</p>
+<h2 id="BestAvailableRule"><a href="#BestAvailableRule" class="headerlink" title="BestAvailableRule"></a>BestAvailableRule</h2><p>在过滤掉故障服务以后，它会基于过去30分钟的统计结果选取当前并发量最小的服务节点，也就是最“闲”的节点作为目标地址。如果统计结果尚未生成，则采用轮询的方式选定节点。<br>这种策略适合对响应时间较短，或者说响应时间和业务复杂度是非线性相关的接口。</p>
+<h2 id="AvailabilityFilteringRule"><a href="#AvailabilityFilteringRule" class="headerlink" title="AvailabilityFilteringRule"></a>AvailabilityFilteringRule</h2><p>这个规则底层依赖RandomRobinRule来选取节点，但并非来者不拒，它也是有一些底线的，必须要满足它的最低要求的节点才会被选中。如果节点满足了要求，无论其响应时间或者当前并发量是什么，都会被选中。每次AvailabilityFilteringRule（简称AFR）都会请求RandomRobinRule挑选一个节点，然后对这个节点做以下两步检查：</p>
+<ul>
+<li>是否处于熔断状态</li>
+<li>节点当前的active请求连接数超过阈值，超过了则表示节点负载过高  </li>
+</ul>
+<p>如果被选中的server不幸挂掉了检查，那么AFR会自动重试（次数最多10次），让RobinRule重新选择一个服务节点。</p>
+<h2 id="ZoneAvoidanceRule"><a href="#ZoneAvoidanceRule" class="headerlink" title="ZoneAvoidanceRule"></a>ZoneAvoidanceRule</h2><p>这个过滤器包含了组合过滤条件，分别是Zone级别和可用性级别。  </p>
+<ul>
+<li>Zone Filter: 在Eureka注册中一个服务节点有Zone, Region和URL三个身份信息，其中Zone可以理解为机房大区（未指定则由Eureka给定默认值），而这里会对这个Zone的健康情况过滤其下面所有服务节点。</li>
+<li>可用性过滤：这里和AvailabilityFilteringRule的验证非常像，会过滤掉当前并发量较大，或者处于熔断状态的服务节点。</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/21/Eureka%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="PD">
+      <meta itemprop="description" content="Cream rises to the top.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/03/21/Eureka%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/" class="post-title-link" itemprop="url">Eureka核心概念</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-03-21 19:34:21 / 修改时间：23:19:24" itemprop="dateCreated datePublished" datetime="2021-03-21T19:34:21+08:00">2021-03-21</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">微服务架构</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Eureka简介"><a href="#Eureka简介" class="headerlink" title="Eureka简介"></a>Eureka简介</h2><p>Eureka是Netflix开源的服务发现框架，本身是一个基于REST的服务，主要用于定位运行在AWS域中的中间层服务，以达到负载均衡和中间层服务故障转移的目的。SpringCloud将它集成在其子项目spring-cloud-netflix中，以实现SpringCloud的服务发现功能。</p>
+<img src="/2021/03/21/Eureka%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/eureka-arch.jpeg" class="">
+
+<h2 id="注册中心搭建"><a href="#注册中心搭建" class="headerlink" title="注册中心搭建"></a>注册中心搭建</h2><h3 id="添加maven依赖"><a href="#添加maven依赖" class="headerlink" title="添加maven依赖"></a>添加maven依赖</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.cloud&lt;&#x2F;groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-cloud-starter-netflix-eureka-server&lt;&#x2F;artifactId&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="启动类添加注解-EnableEurekaServer"><a href="#启动类添加注解-EnableEurekaServer" class="headerlink" title="启动类添加注解@EnableEurekaServer"></a>启动类添加注解@EnableEurekaServer</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">package com.example.springcloud;</span><br><span class="line"></span><br><span class="line">import org.springframework.boot.SpringApplication;</span><br><span class="line">import org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line">import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;</span><br><span class="line"></span><br><span class="line">@EnableEurekaServer</span><br><span class="line">@SpringBootApplication</span><br><span class="line">public class EurekaServerApplication &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        SpringApplication.run(EurekaServerApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="application-properties添加配置"><a href="#application-properties添加配置" class="headerlink" title="application.properties添加配置"></a>application.properties添加配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">spring.application.name&#x3D;eureka-server</span><br><span class="line">server.port&#x3D;20000</span><br><span class="line">eureka.instance.hostname&#x3D;localhost</span><br><span class="line"># 是否注册到eureka，默认true</span><br><span class="line">eureka.client.register-with-eureka&#x3D;false</span><br><span class="line"># 是否从eureka获取注册信息，默认true</span><br><span class="line">eureka.client.fetch-registry&#x3D;false</span><br></pre></td></tr></table></figure>
+<h2 id="客户端搭建"><a href="#客户端搭建" class="headerlink" title="客户端搭建"></a>客户端搭建</h2><h3 id="添加maven依赖-1"><a href="#添加maven依赖-1" class="headerlink" title="添加maven依赖"></a>添加maven依赖</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.cloud&lt;&#x2F;groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-cloud-starter-netflix-eureka-client&lt;&#x2F;artifactId&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="启动类添加注解-EnableDiscoveryClient"><a href="#启动类添加注解-EnableDiscoveryClient" class="headerlink" title="启动类添加注解@EnableDiscoveryClient"></a>启动类添加注解@EnableDiscoveryClient</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">package com.example.springcloud;</span><br><span class="line"></span><br><span class="line">import org.springframework.boot.SpringApplication;</span><br><span class="line">import org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line">import org.springframework.cloud.client.discovery.EnableDiscoveryClient;</span><br><span class="line"></span><br><span class="line">@SpringBootApplication</span><br><span class="line">@EnableDiscoveryClient</span><br><span class="line">public class EurekaClientApplication &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        SpringApplication.run(EurekaClientApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="application-properties添加配置-1"><a href="#application-properties添加配置-1" class="headerlink" title="application.properties添加配置"></a>application.properties添加配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">spring.application.name&#x3D;eureka-client</span><br><span class="line">server.port&#x3D;30002</span><br><span class="line">eureka.client.service-url.defaultZone&#x3D;http:&#x2F;&#x2F;localhost:20000&#x2F;eureka&#x2F;</span><br></pre></td></tr></table></figure>
+<img src="/2021/03/21/Eureka%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/eureka.png" class="">
+
+<h2 id="服务注册"><a href="#服务注册" class="headerlink" title="服务注册"></a>服务注册</h2><p>Eureka整体上分为两个主体：Eureka Server和Eureka Client，Eureka Server是注册中心，Eureka Client既可以是服务提供者（Service Provider），也可以是服务消费者（Service Consumer）。Eureka Client启动时会向注册中心发送信息，它提供自身的元数据，比如IP地址、端口服务名、运行状况等。Eureka Server接受客户端信息，更新服务列表。</p>
+<h2 id="心跳检测"><a href="#心跳检测" class="headerlink" title="心跳检测"></a>心跳检测</h2><p>由Eureka Client定时发起，Client通过renew机制频繁的向Server发送消息，通知Server它还活着，不要将其从服务列表中剔除。</p>
+<h2 id="服务续约"><a href="#服务续约" class="headerlink" title="服务续约"></a>服务续约</h2><p>在注册服务完成以后，服务提供者会维持一个心跳（定时向Eureka Server发起rest 请求），告诉Eureka Server：“我还活着”。这个我们称为服务续约（renew）。有两个重要的参数可以修改服务续约的行为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 每隔5秒钟，向服务中心发送一条续约指令。默认30秒</span><br><span class="line">eureka.instance.lease-renewal-interval-in-seconds&#x3D;5</span><br><span class="line"></span><br><span class="line"># 如果10秒内，依然没有收到续约请求，判定服务过期。默认90秒</span><br><span class="line">eureka.instance.lease-expiration-duration-in-seconds&#x3D;10</span><br></pre></td></tr></table></figure>
+<h2 id="服务剔除"><a href="#服务剔除" class="headerlink" title="服务剔除"></a>服务剔除</h2><p>由Server端定时发起，Eureka Server在启动的时候会创建一个定时任务，每隔60秒就去将当前服务列表中超过90秒还没续约的服务剔除出去，通过这种方式来避免服务消费者调用了一个无效的服务。有一个重要的参数可以修改服务剔除的行为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 每隔10秒触发一次服务剔除。默认60秒</span><br><span class="line">eureka.server.eviction-interval-timer-in-ms&#x3D;10000</span><br></pre></td></tr></table></figure>
+<h2 id="服务自保"><a href="#服务自保" class="headerlink" title="服务自保"></a>服务自保</h2><p>默认情况下，如果Eureka Server每隔60秒就去将当前服务列表中超过90秒还没续约的服务剔除出去，但是在微服务架构下服务之间通常都是跨进程调用，网络通信往往会面临着各种问题，比如微服务状态正常，网络分区故障，导致此实例被注销。固定时间内大量实例被注销，可能会严重威胁整个微服务架构的可用性。为了解决这个问题，Eureka 开发了自我保护机制，那么什么是自我保护机制呢？<br>Eureka Server 在运行期间会去统计心跳失败比例在 15 分钟之内是否低于 85%，如果低于 85%，Eureka Server 即会进入自我保护机制。<br>Eureka 自我保护机制是为了防止误杀服务而提供的一个机制。当个别客户端出现心跳失联时，则认为是客户端的问题，剔除掉客户端；当 Eureka 捕获到大量的心跳失败时，则认为可能是网络问题，进入自我保护机制；当客户端心跳恢复时，Eureka 会自动退出自我保护机制。<br>与服务自保相关的配置参数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 强制关闭服务自保（自动开关不起作用）</span><br><span class="line">eureka.server.enable-self-preservation&#x3D;false</span><br></pre></td></tr></table></figure>
+<h2 id="服务下线"><a href="#服务下线" class="headerlink" title="服务下线"></a>服务下线</h2><p>服务提供者在运行的过程中可能会发生关闭或者重启，当服务进行正常关闭时，它会触发一个服务下线的REST请求给Eureka Server，告诉服务注册中心我要下线了，服务注册中心收到请求之后，将该服务状态置为DOWN，表示服务已下线，并将该事件传播出去，这样就可以避免服务消费者调用了一个已经下线的服务提供者了。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/07/git%E7%9F%A5%E8%AF%86%E5%9B%9E%E9%A1%BE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="PD">
+      <meta itemprop="description" content="Cream rises to the top.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/03/07/git%E7%9F%A5%E8%AF%86%E5%9B%9E%E9%A1%BE/" class="post-title-link" itemprop="url">git知识回顾</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-03-07 15:01:10 / 修改时间：17:18:20" itemprop="dateCreated datePublished" datetime="2021-03-07T15:01:10+08:00">2021-03-07</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>今天在整理笔记时，无意中发现一张思维导图，那是两年前在看<a target="_blank" rel="noopener" href="https://git-scm.com/book/zh/v2">Pro Git</a>这本书中文版时整理的。记忆瞬间回到两年前，犹记得当时在看这本书时，还在为git的巧妙设计感到惊叹，它是那么的快速、高效、简洁、实用。当时看完前面几章节，对git的有较全面的了解，同时掌握一些核心概念和常用命令。转眼间两年过去，平常工作中都是借助IDE工具IDEA提交代码，比较少用到命令行模式，果然知识是会遗忘的，既然今天翻到这份思维导图，那也借此机会复习回顾一下吧。  </p>
+<h2 id="起步"><a href="#起步" class="headerlink" title="起步"></a>起步</h2><img src="/2021/03/07/git%E7%9F%A5%E8%AF%86%E5%9B%9E%E9%A1%BE/git1.png" class="">
+
+<h2 id="Git基础"><a href="#Git基础" class="headerlink" title="Git基础"></a>Git基础</h2><img src="/2021/03/07/git%E7%9F%A5%E8%AF%86%E5%9B%9E%E9%A1%BE/git2.png" class="">
+<img src="/2021/03/07/git%E7%9F%A5%E8%AF%86%E5%9B%9E%E9%A1%BE/git3.png" class="">
+
+<h2 id="Git分支"><a href="#Git分支" class="headerlink" title="Git分支"></a>Git分支</h2><img src="/2021/03/07/git%E7%9F%A5%E8%AF%86%E5%9B%9E%E9%A1%BE/git4.png" class="">
+
+<h2 id="GitHub-amp-分布式Git"><a href="#GitHub-amp-分布式Git" class="headerlink" title="GitHub &amp; 分布式Git"></a>GitHub &amp; 分布式Git</h2><img src="/2021/03/07/git%E7%9F%A5%E8%AF%86%E5%9B%9E%E9%A1%BE/git5.png" class="">
+
+<p>最后附上完整思维导图</p>
+<img src="/2021/03/07/git%E7%9F%A5%E8%AF%86%E5%9B%9E%E9%A1%BE/Git.png" class="">
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/20/%E5%9F%BA%E4%BA%8EZookeeper%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1012,275 +1254,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/13/RabbitMQ%E5%85%A5%E9%97%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="PD">
-      <meta itemprop="description" content="Cream rises to the top.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/02/13/RabbitMQ%E5%85%A5%E9%97%A8/" class="post-title-link" itemprop="url">RabbitMQ入门</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-02-13 23:07:05" itemprop="dateCreated datePublished" datetime="2021-02-13T23:07:05+08:00">2021-02-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-02-21 23:12:47" itemprop="dateModified" datetime="2021-02-21T23:12:47+08:00">2021-02-21</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">分布式架构</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="什么是RabbitMQ-？"><a href="#什么是RabbitMQ-？" class="headerlink" title="什么是RabbitMQ ？"></a>什么是RabbitMQ ？</h2><p>RabbitMQ是一个开源的消息代理和队列服务器，用来通过普通协议在完全不同的应用之间共享数据，RabbitMQ是使用Erlang语言编写的，并且RabbitMQ是基于AMQP协议的。  </p>
-<h2 id="什么是AMQP高级消息队列协议-？"><a href="#什么是AMQP高级消息队列协议-？" class="headerlink" title="什么是AMQP高级消息队列协议 ？"></a>什么是AMQP高级消息队列协议 ？</h2><p>AMQP：Advanced Message Queuing Protocol.<br>AMQP定义：是具有现代特征的二进制协议。是一个提供统一消息服务的应用层标准高级消息队列协议，是应用层协议的一个开放标准，为面向消息的中间件设计。  </p>
-<p><strong>AMQP协议模型</strong>  </p>
-<img src="/2021/02/13/RabbitMQ%E5%85%A5%E9%97%A8/AMQP.png" class="">
-
-<p><strong>Server</strong> : 又称Broker，接受客户端的连接，实现AMQP实体服务。<br><strong>Connection</strong> : 连接，应用程序与Broker的网络连接。<br><strong>Channel</strong> : 网络信道，几乎所有的操作都在Channel中进行，Channel是进行消息读写的通道。客户端可建立多个Channel，每个Channel代表一个会话任务。<br><strong>Message</strong> : 消息，服务器和应用程序之间传送的数据，由Properties和Body组成。Properties可以对消息进行修饰，比如消息的优先级、延迟等高级特性；Body则就是消息体内容。<br><strong>Virtual host</strong> : 虚拟地址，用于进行逻辑隔离，最上层的消息路由。一个Virtual Host里面可以有若干个Exchange和Queue，同一个VirtualHost 里面不能有相同名称的Exchange或Queue。<br><strong>Exchange</strong> : 交换机，接收消息，根据路由键转发消息到绑定的队列。<br><strong>Binding</strong> :  Exchange和Queue之间的虚拟连接，binding中可以包含routing key。<br><strong>Routing key</strong> : 一个路由规则，虚拟机可用它来确定如何路由一个特定消息。<br><strong>Queue</strong> : 也称为Message Queue,消息队列，保存消息并将它们转发给消费者。</p>
-<p><strong>RabbitMQ整体架构</strong></p>
-<img src="/2021/02/13/RabbitMQ%E5%85%A5%E9%97%A8/RabbitMQ-arch.png" class="">
-
-<h2 id="RabbitMQ核心API"><a href="#RabbitMQ核心API" class="headerlink" title="RabbitMQ核心API"></a>RabbitMQ核心API</h2><p><strong>核心API - Exchange概念</strong><br>Exchange ： 接受消息，并根据路由键转发消息到所绑定的队列。这是RabbitMQ非常重要的概念。  </p>
-<ul>
-<li><p>Exchange（交换机）本身有很多属性和类型 ：  </p>
-</li>
-<li><p>Exchange属性 ：  </p>
-<ul>
-<li>Type ： 交换机类型 direct、topic、fanout、headers</li>
-<li>Durability ： 是否需要持久化，默认为true表示持久化</li>
-<li>Auto Delete ： 当最后一个绑定到Exchange上的队列删除后，自动删除该Exchange</li>
-<li>Internal ： 当前Exchange是否用于RabbitMQ内部使用，默认为False</li>
-<li>Arguments ： 扩展参数，用于扩展AMQP协议自制定化使用</li>
-</ul>
-</li>
-<li><p>交换机类型 ：  </p>
-<ul>
-<li><p>Direct Exchange : 所有发送到Direct Exchange的消息被转发到RouteKey中指定的Queue，如下图所示：</p>
-<img src="/2021/02/13/RabbitMQ%E5%85%A5%E9%97%A8/direct.png" class="">
-</li>
-<li><p>Topic Exchange ： 所有发送到Topic Exchange的消息被转发到所有关心RouteKey中指定Topic的Queue上。Exchange将RouteKey和某Topic进行模糊匹配，此时队列需要绑定一个Topic。符号“#”：匹配一个或多个词，例如“Log.#”能够匹配到”log.info.abc”；符号”<em>“：只匹配一个词，例如”log.</em>“只会匹配到”log.error”。如下图所示：</p>
-<img src="/2021/02/13/RabbitMQ%E5%85%A5%E9%97%A8/topic.png" class="">
-</li>
-<li><p>Fanout Exchange ： 不处理路由键，只需要简单的将队列绑定到交换机上。发送到交换机的消息都会被转发到与该交换机绑定的所有队列上。Fanout交换机转发消息是最快的，它不会做各种路由匹配。</p>
-<img src="/2021/02/13/RabbitMQ%E5%85%A5%E9%97%A8/fanout.png" class="">
-</li>
-</ul>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/01/redis%E5%93%A8%E5%85%B5%E6%9C%BA%E5%88%B6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="PD">
-      <meta itemprop="description" content="Cream rises to the top.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/01/01/redis%E5%93%A8%E5%85%B5%E6%9C%BA%E5%88%B6/" class="post-title-link" itemprop="url">redis哨兵机制</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-01-01 13:21:40" itemprop="dateCreated datePublished" datetime="2021-01-01T13:21:40+08:00">2021-01-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-02-23 21:22:49" itemprop="dateModified" datetime="2021-02-23T21:22:49+08:00">2021-02-23</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">集群架构</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="简单介绍"><a href="#简单介绍" class="headerlink" title="简单介绍"></a>简单介绍</h2><p>Redis Sentinel为Redis提供了高可用，这意味着使用Sentinel可以创建部署，该部署可以在无需人工干预的情况下抵抗某些类型的故障，如主从模式下master节点服务器宕机。<br>Redis Sentinel还提供了附带任务，如：监控、通知、为客户端充当配置提供者。<br>这是宏观上Sentinel功能的完整列表：  </p>
-<ul>
-<li>监控：Sentinel会不断的检查主实例和从实例是否按预期工作。</li>
-<li>通知：Sentinel可以通过API通知系统管理员或其他计算机程序，其中一个受监控的Redis实例出了问题。</li>
-<li>自动故障转移：如果主服务未按预期工作，则Sentinel可以启动故障转移过程，在该过程中将其中一个从服务升级为主服务，其他从服务重新配置新主服务的地址，使用Redis服务的应用程序在连接时被通知使用新主服务的地址。  </li>
-<li>配置提供者：Sentinel充当客户端服务发现的授权来源：客户端连接到Sentinels，以询问负责给定服务的当前Redis主服务的地址。如果发生故障转移，Sentinel将报告新地址。</li>
-</ul>
-<h2 id="Sentinel配置"><a href="#Sentinel配置" class="headerlink" title="Sentinel配置"></a>Sentinel配置</h2><p>Redis源发行版包含一个名为sentinel.conf的文件，该文件是一个自说明性的示例配置文件，可用于配置Sentinel，但是典型的最小配置文件如下所示：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># sentinel monitor &lt;master-group-name&gt; &lt;ip&gt; &lt;port&gt; &lt;quorum&gt;</span><br><span class="line"># sentinel监控一个名为mymaster的主服务器，该主服务器地址和端口为127.0.0.1和6379，quorum为触发客观下线的数量</span><br><span class="line">sentinel monitor mymaster 127.0.0.1 6379 2</span><br><span class="line"></span><br><span class="line"># master最长响应时间，超过这个时间就主观判断它下线，默认60秒</span><br><span class="line">sentinel down-after-milliseconds mymaster 60000</span><br><span class="line"></span><br><span class="line"># 执行故障转移的最大等待时间，默认3分钟</span><br><span class="line">sentinel failover-timeout mymaster 180000</span><br><span class="line"></span><br><span class="line"># 用于限制主从切换之后，最多的并行同步数据的从节点数量</span><br><span class="line">sentinel parallel-syncs mymaster 1</span><br></pre></td></tr></table></figure>
-<h2 id="运行Sentinel"><a href="#运行Sentinel" class="headerlink" title="运行Sentinel"></a>运行Sentinel</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-sentinel &#x2F;path&#x2F;to&#x2F;sentinel.conf</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/12/29/redis%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="PD">
-      <meta itemprop="description" content="Cream rises to the top.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/12/29/redis%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">redis主从架构模式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-12-29 23:36:34" itemprop="dateCreated datePublished" datetime="2020-12-29T23:36:34+08:00">2020-12-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-02-23 21:22:54" itemprop="dateModified" datetime="2021-02-23T21:22:54+08:00">2021-02-23</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">集群架构</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="简单介绍"><a href="#简单介绍" class="headerlink" title="简单介绍"></a>简单介绍</h2><p>单机的redis，能够承载的QPS大概在上万到几万不等。对于缓存来说，一般都是用来支撑读高并发。因此架构做成主从（master-slave）架构，一主多从，主负责写，并且将数据复制到其他的slave节点，从节点负责读。所有的读请求全部走从节点。这样也可以很轻松实现水平扩容，支撑读高并发。</p>
-<h2 id="redis主从复制的核心原理"><a href="#redis主从复制的核心原理" class="headerlink" title="redis主从复制的核心原理"></a>redis主从复制的核心原理</h2><p>当启动一个slave node的时候，它会发送一个PSYNC命令给master node。<br>如果这是 slave node 初次连接到 master node，那么会触发一次 full resynchronization 全量复制。此时 master 会启动一个后台线程，开始生成一份 RDB 快照文件，同时还会将从客户端 client 新收到的所有写命令缓存在内存中。RDB 文件生成完毕后， master 会将这个 RDB 发送给 slave，slave 会先写入本地磁盘，然后再从本地磁盘加载到内存中，接着 master 会将内存中缓存的写命令发送到 slave，slave 也会同步这些数据。slave node 如果跟 master node 有网络故障，断开了连接，会自动重连，连接之后 master node 仅会复制给 slave 部分缺少的数据。  </p>
-<img src="/2020/12/29/redis%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F/redis-master-slave.png" class="">
-
-<h2 id="redis配置主从架构"><a href="#redis配置主从架构" class="headerlink" title="redis配置主从架构"></a>redis配置主从架构</h2><p>进入从节点，打开redis配置文件，进行如下配置：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># 配置所属主服务器ip和端口</span><br><span class="line"># replicaof &lt;masterip&gt; &lt;masterport&gt;</span><br><span class="line">replicaof 192.168.1.1 6379</span><br><span class="line"></span><br><span class="line"># 配置所属主服务器的密码</span><br><span class="line"># masterauth &lt;master-passord&gt;</span><br><span class="line">masterauth 123456</span><br><span class="line"></span><br><span class="line"># 从服务器通常是只读，配置只读</span><br><span class="line">replica-read-only yes</span><br><span class="line"></span><br><span class="line"># 主从复制同步策略：disk or socket，无磁盘化复制</span><br><span class="line">repl-diskless-sync no</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1350,20 +1323,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-count">28</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">17</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
