@@ -162,6 +162,91 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/22/Ribbon%E7%9A%84%E4%B8%83%E7%A7%8D%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%AD%96%E7%95%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="PD">
+      <meta itemprop="description" content="Cream rises to the top.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/03/22/Ribbon%E7%9A%84%E4%B8%83%E7%A7%8D%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%AD%96%E7%95%A5/" class="post-title-link" itemprop="url">Ribbon的七种负载均衡策略</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-03-22 20:49:35 / 修改时间：22:42:48" itemprop="dateCreated datePublished" datetime="2021-03-22T20:49:35+08:00">2021-03-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">微服务架构</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Ribbon简介：Spring Cloud Ribbon是一个基于HTTP和TCP的客户端负载均衡工具，它基于Netflix Ribbon实现。通过Spring Cloud的封装，可以让我们轻松地将面向服务的REST模版请求自动转换成客户端负载均衡的服务调用。Spring Cloud Ribbon虽然只是一个工具类框架，它不像服务注册中心、配置中心、API网关那样需要独立部署，但是它几乎存在于每一个Spring Cloud构建的微服务和基础设施中。因为微服务间的调用，API网关的请求转发等内容，实际上都是通过Ribbon来实现的，包括Feign，它也是基于Ribbon实现的工具。所以，对Spring Cloud Ribbon的理解和使用，对于我们使用Spring Cloud来构建微服务非常重要。本文将介绍Ribbon的七种负载均衡策略。</p>
+<h2 id="RandomRule"><a href="#RandomRule" class="headerlink" title="RandomRule"></a>RandomRule</h2><p>顾名思义，随机访问。</p>
+<h2 id="RoundRobinRule"><a href="#RoundRobinRule" class="headerlink" title="RoundRobinRule"></a>RoundRobinRule</h2><p>顾名思义，轮训访问。<br>这里有个疑问，在多线程环境下，两个请求同时访问这个Rule是否会读取到相同节点呢？答案是不会，这靠的是RoundRobinRule底部的自旋锁+CAS的同步操作。CAS全称是compare and swap，是一种借助操作系统函数来实现的同步操作。CAS+自旋锁这套组合技是高并发下最廉价的线程安全手段，因为这套操作不需要锁定系统资源。当然了，有优点必然也有缺点，自旋锁如果迟迟不能释放，将会带来CPU资源的浪费，因为自旋本身并不会执行任何业务逻辑，而是单纯的使CPU“空转”。所以通常情况下会对自旋锁的旋转次数做一个限制，比如JDK中synchronize底层的锁升级策略，就对自旋次数做了动态调整。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">public Server choose(ILoadBalancer lb, Object key) &#123;</span><br><span class="line">    if (lb &#x3D;&#x3D; null) &#123;</span><br><span class="line">        log.warn(&quot;no load balancer&quot;);</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Server server &#x3D; null;</span><br><span class="line">    int count &#x3D; 0;</span><br><span class="line">    while (server &#x3D;&#x3D; null &amp;&amp; count++ &lt; 10) &#123;</span><br><span class="line">        List&lt;Server&gt; reachableServers &#x3D; lb.getReachableServers();</span><br><span class="line">        List&lt;Server&gt; allServers &#x3D; lb.getAllServers();</span><br><span class="line">        int upCount &#x3D; reachableServers.size();</span><br><span class="line">        int serverCount &#x3D; allServers.size();</span><br><span class="line"></span><br><span class="line">        if ((upCount &#x3D;&#x3D; 0) || (serverCount &#x3D;&#x3D; 0)) &#123;</span><br><span class="line">            log.warn(&quot;No up servers available from load balancer: &quot; + lb);</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        int nextServerIndex &#x3D; incrementAndGetModulo(serverCount);</span><br><span class="line">        server &#x3D; allServers.get(nextServerIndex);</span><br><span class="line"></span><br><span class="line">        if (server &#x3D;&#x3D; null) &#123;</span><br><span class="line">            &#x2F;* Transient. *&#x2F;</span><br><span class="line">            Thread.yield();</span><br><span class="line">            continue;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (server.isAlive() &amp;&amp; (server.isReadyToServe())) &#123;</span><br><span class="line">            return (server);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; Next.</span><br><span class="line">        server &#x3D; null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (count &gt;&#x3D; 10) &#123;</span><br><span class="line">        log.warn(&quot;No available alive servers after 10 tries from load balancer: &quot;</span><br><span class="line">                + lb);</span><br><span class="line">    &#125;</span><br><span class="line">    return server;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private int incrementAndGetModulo(int modulo) &#123;</span><br><span class="line">    for (;;) &#123;</span><br><span class="line">        int current &#x3D; nextServerCyclicCounter.get();</span><br><span class="line">        int next &#x3D; (current + 1) % modulo;</span><br><span class="line">        if (nextServerCyclicCounter.compareAndSet(current, next))</span><br><span class="line">            return next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="RetryRule"><a href="#RetryRule" class="headerlink" title="RetryRule"></a>RetryRule</h2><p>该策略实现了一个具备重试机制的实例选择功能。从源码中可以看出，内部定义了一个IRule对象，默认是RoundRobinRule实例，choose方法中则实现了对内部定义的策略进行反复尝试的策略，若期间能够选择到具体的服务实例就返回，若选择不到并且超过设置的尝试结束时间(maxRetryMillis参数定义的值 + choose方法开始执行的时间戳)就返回null。</p>
+<h2 id="WeightedResponseTimeRule"><a href="#WeightedResponseTimeRule" class="headerlink" title="WeightedResponseTimeRule"></a>WeightedResponseTimeRule</h2><p>这个Rule继承自RoundRibbonRule，他会根据服务节点的响应时间计算权重，响应时间越长权重就越低，响应越快则权重越高，权重的高低决定了机器被选中概率的高低。也就是说，响应时间越小的机器，被选中的概率越大。由于服务器刚启动的时候，对各个服务节点采样不足，因此会采用轮询策略，当积累到一定的样本时候，会切换到WeightedResponseTimeRule模式。<br>这种策略适合重量级接口，尤其是根据参数不同会导致系统资源使用率浮动较大的接口（响应时间和业务复杂度线性相关）。<br>假设某个接口比较重量级，接口的处理时间与接收到的参数强相关。打个比方，订单导出服务，如果发起10个请求，每个请求都需要导出当前用户过去一整年的订单数据，那么这10个请求都会耗费大量的系统资源（CPU，内存）参与业务，同时响应时间也会相应拉长。在另一台机子上，同样是10个请求，但是只需要导出1个月的数据，相比较第一台机器，连接数相等的情况下，系统资源的占用率却大大不同。</p>
+<h2 id="BestAvailableRule"><a href="#BestAvailableRule" class="headerlink" title="BestAvailableRule"></a>BestAvailableRule</h2><p>在过滤掉故障服务以后，它会基于过去30分钟的统计结果选取当前并发量最小的服务节点，也就是最“闲”的节点作为目标地址。如果统计结果尚未生成，则采用轮询的方式选定节点。<br>这种策略适合对响应时间较短，或者说响应时间和业务复杂度是非线性相关的接口。</p>
+<h2 id="AvailabilityFilteringRule"><a href="#AvailabilityFilteringRule" class="headerlink" title="AvailabilityFilteringRule"></a>AvailabilityFilteringRule</h2><p>这个规则底层依赖RandomRobinRule来选取节点，但并非来者不拒，它也是有一些底线的，必须要满足它的最低要求的节点才会被选中。如果节点满足了要求，无论其响应时间或者当前并发量是什么，都会被选中。每次AvailabilityFilteringRule（简称AFR）都会请求RandomRobinRule挑选一个节点，然后对这个节点做以下两步检查：</p>
+<ul>
+<li>是否处于熔断状态</li>
+<li>节点当前的active请求连接数超过阈值，超过了则表示节点负载过高  </li>
+</ul>
+<p>如果被选中的server不幸挂掉了检查，那么AFR会自动重试（次数最多10次），让RobinRule重新选择一个服务节点。</p>
+<h2 id="ZoneAvoidanceRule"><a href="#ZoneAvoidanceRule" class="headerlink" title="ZoneAvoidanceRule"></a>ZoneAvoidanceRule</h2><p>这个过滤器包含了组合过滤条件，分别是Zone级别和可用性级别。  </p>
+<ul>
+<li>Zone Filter: 在Eureka注册中一个服务节点有Zone, Region和URL三个身份信息，其中Zone可以理解为机房大区（未指定则由Eureka给定默认值），而这里会对这个Zone的健康情况过滤其下面所有服务节点。</li>
+<li>可用性过滤：这里和AvailabilityFilteringRule的验证非常像，会过滤掉当前并发量较大，或者处于熔断状态的服务节点。</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/21/Eureka%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1169,115 +1254,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/13/RabbitMQ%E5%85%A5%E9%97%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="PD">
-      <meta itemprop="description" content="Cream rises to the top.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/02/13/RabbitMQ%E5%85%A5%E9%97%A8/" class="post-title-link" itemprop="url">RabbitMQ入门</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-02-13 23:07:05" itemprop="dateCreated datePublished" datetime="2021-02-13T23:07:05+08:00">2021-02-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-02-21 23:12:47" itemprop="dateModified" datetime="2021-02-21T23:12:47+08:00">2021-02-21</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">分布式架构</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="什么是RabbitMQ-？"><a href="#什么是RabbitMQ-？" class="headerlink" title="什么是RabbitMQ ？"></a>什么是RabbitMQ ？</h2><p>RabbitMQ是一个开源的消息代理和队列服务器，用来通过普通协议在完全不同的应用之间共享数据，RabbitMQ是使用Erlang语言编写的，并且RabbitMQ是基于AMQP协议的。  </p>
-<h2 id="什么是AMQP高级消息队列协议-？"><a href="#什么是AMQP高级消息队列协议-？" class="headerlink" title="什么是AMQP高级消息队列协议 ？"></a>什么是AMQP高级消息队列协议 ？</h2><p>AMQP：Advanced Message Queuing Protocol.<br>AMQP定义：是具有现代特征的二进制协议。是一个提供统一消息服务的应用层标准高级消息队列协议，是应用层协议的一个开放标准，为面向消息的中间件设计。  </p>
-<p><strong>AMQP协议模型</strong>  </p>
-<img src="/2021/02/13/RabbitMQ%E5%85%A5%E9%97%A8/AMQP.png" class="">
-
-<p><strong>Server</strong> : 又称Broker，接受客户端的连接，实现AMQP实体服务。<br><strong>Connection</strong> : 连接，应用程序与Broker的网络连接。<br><strong>Channel</strong> : 网络信道，几乎所有的操作都在Channel中进行，Channel是进行消息读写的通道。客户端可建立多个Channel，每个Channel代表一个会话任务。<br><strong>Message</strong> : 消息，服务器和应用程序之间传送的数据，由Properties和Body组成。Properties可以对消息进行修饰，比如消息的优先级、延迟等高级特性；Body则就是消息体内容。<br><strong>Virtual host</strong> : 虚拟地址，用于进行逻辑隔离，最上层的消息路由。一个Virtual Host里面可以有若干个Exchange和Queue，同一个VirtualHost 里面不能有相同名称的Exchange或Queue。<br><strong>Exchange</strong> : 交换机，接收消息，根据路由键转发消息到绑定的队列。<br><strong>Binding</strong> :  Exchange和Queue之间的虚拟连接，binding中可以包含routing key。<br><strong>Routing key</strong> : 一个路由规则，虚拟机可用它来确定如何路由一个特定消息。<br><strong>Queue</strong> : 也称为Message Queue,消息队列，保存消息并将它们转发给消费者。</p>
-<p><strong>RabbitMQ整体架构</strong></p>
-<img src="/2021/02/13/RabbitMQ%E5%85%A5%E9%97%A8/RabbitMQ-arch.png" class="">
-
-<h2 id="RabbitMQ核心API"><a href="#RabbitMQ核心API" class="headerlink" title="RabbitMQ核心API"></a>RabbitMQ核心API</h2><p><strong>核心API - Exchange概念</strong><br>Exchange ： 接受消息，并根据路由键转发消息到所绑定的队列。这是RabbitMQ非常重要的概念。  </p>
-<ul>
-<li><p>Exchange（交换机）本身有很多属性和类型 ：  </p>
-</li>
-<li><p>Exchange属性 ：  </p>
-<ul>
-<li>Type ： 交换机类型 direct、topic、fanout、headers</li>
-<li>Durability ： 是否需要持久化，默认为true表示持久化</li>
-<li>Auto Delete ： 当最后一个绑定到Exchange上的队列删除后，自动删除该Exchange</li>
-<li>Internal ： 当前Exchange是否用于RabbitMQ内部使用，默认为False</li>
-<li>Arguments ： 扩展参数，用于扩展AMQP协议自制定化使用</li>
-</ul>
-</li>
-<li><p>交换机类型 ：  </p>
-<ul>
-<li><p>Direct Exchange : 所有发送到Direct Exchange的消息被转发到RouteKey中指定的Queue，如下图所示：</p>
-<img src="/2021/02/13/RabbitMQ%E5%85%A5%E9%97%A8/direct.png" class="">
-</li>
-<li><p>Topic Exchange ： 所有发送到Topic Exchange的消息被转发到所有关心RouteKey中指定Topic的Queue上。Exchange将RouteKey和某Topic进行模糊匹配，此时队列需要绑定一个Topic。符号“#”：匹配一个或多个词，例如“Log.#”能够匹配到”log.info.abc”；符号”<em>“：只匹配一个词，例如”log.</em>“只会匹配到”log.error”。如下图所示：</p>
-<img src="/2021/02/13/RabbitMQ%E5%85%A5%E9%97%A8/topic.png" class="">
-</li>
-<li><p>Fanout Exchange ： 不处理路由键，只需要简单的将队列绑定到交换机上。发送到交换机的消息都会被转发到与该交换机绑定的所有队列上。Fanout交换机转发消息是最快的，它不会做各种路由匹配。</p>
-<img src="/2021/02/13/RabbitMQ%E5%85%A5%E9%97%A8/fanout.png" class="">
-</li>
-</ul>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1347,7 +1323,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-count">28</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1360,7 +1336,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-count">17</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
