@@ -162,6 +162,213 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/17/RabbitMQ%E5%BF%AB%E9%80%9F%E5%AE%89%E8%A3%85%E4%BB%A5%E5%8F%8A%E4%B8%8ESpringBoot2-x%E6%95%B4%E5%90%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="PD">
+      <meta itemprop="description" content="Cream rises to the top.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/02/17/RabbitMQ%E5%BF%AB%E9%80%9F%E5%AE%89%E8%A3%85%E4%BB%A5%E5%8F%8A%E4%B8%8ESpringBoot2-x%E6%95%B4%E5%90%88/" class="post-title-link" itemprop="url">RabbitMQ快速安装以及与SpringBoot2.x整合</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-02-17 23:19:42" itemprop="dateCreated datePublished" datetime="2021-02-17T23:19:42+08:00">2021-02-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-02-21 23:22:25" itemprop="dateModified" datetime="2021-02-21T23:22:25+08:00">2021-02-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">分布式架构</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="快速安装单机版RabbitMQ"><a href="#快速安装单机版RabbitMQ" class="headerlink" title="快速安装单机版RabbitMQ"></a>快速安装单机版RabbitMQ</h2><ul>
+<li>准备一台Linux虚拟机（CentOS 7）</li>
+<li>进入安装：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"># 1.首先在Linux上进行一些软件的准备工作，安装一些基础的依赖包</span><br><span class="line">yum install build-essential  openssl openssl-devel unixODBC unixODBC-devel make gcc gcc-c++ kernel-devel</span><br><span class="line"></span><br><span class="line"># 2.下载RabbitMQ所需软件包（这里使用的是RabbitMQ3.6.5稳定版本）</span><br><span class="line">wget https:&#x2F;&#x2F;www.rabbitmq.com&#x2F;releases&#x2F;erlang&#x2F;erlang-18.3-1.el7.centos.x86_64.rpm</span><br><span class="line">wget https:&#x2F;&#x2F;www.rabbitmq.com&#x2F;releases&#x2F;rabbitmq-server&#x2F;v3.6.5&#x2F;rabbitmq-server-3.6.5-1.noarch.rpm</span><br><span class="line"></span><br><span class="line"># 3.安装服务命令</span><br><span class="line">rpm -ivh erlang-18.3-1.el7.centos.x86_64.rpm</span><br><span class="line">rpm -ivh rabbitmq-server-3.6.5-1.noarch.rpm</span><br><span class="line"></span><br><span class="line"># 4.修改用户登录与连接心跳检测</span><br><span class="line">vim &#x2F;usr&#x2F;lib&#x2F;rabbitmq&#x2F;lib&#x2F;rabbitmq_server-3.6.5&#x2F;ebin&#x2F;rabbit.app</span><br><span class="line">修改点1:loopback_users中的&lt;&lt;&quot;guest&quot;&gt;&gt;,只保留guest（用于用户登录）</span><br><span class="line">修改点2:heartbeat 为10（用于心跳连接）</span><br><span class="line"></span><br><span class="line"># 5.安装管理插件和启动服务</span><br><span class="line"></span><br><span class="line"># 5.1 首先启动服务（后面 | 包含了停止、查看状态以及重启的命令）</span><br><span class="line">&#x2F;etc&#x2F;init.d&#x2F;rabbitmq-server start | stop | status | restart</span><br><span class="line"></span><br><span class="line"># 5.2 查看服务有没有启动（5672是RabbitMQ的默认端口）</span><br><span class="line">lsof -i:5672</span><br><span class="line"></span><br><span class="line"># 5.3 安装管理插件</span><br><span class="line">rabbitmq-plugins enable rabbitmq_management</span><br><span class="line"></span><br><span class="line"># 5.4 查看管理端口有没有占用</span><br><span class="line">lsof -i:15672  或者  netstat -tunlp | grep 15672</span><br><span class="line"></span><br><span class="line"># 6.访问页面，输入用户名密码均为：guest</span><br><span class="line"># http:&#x2F;&#x2F;你的ip地址:15672&#x2F;</span><br></pre></td></tr></table></figure>
+<h2 id="RabbitMQ与SpringBoot2-x整合"><a href="#RabbitMQ与SpringBoot2-x整合" class="headerlink" title="RabbitMQ与SpringBoot2.x整合"></a>RabbitMQ与SpringBoot2.x整合</h2><p><strong>聚合工程父pom：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;project xmlns&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0&quot;</span><br><span class="line">         xmlns:xsi&#x3D;&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2001&#x2F;XMLSchema-instance&quot;</span><br><span class="line">         xsi:schemaLocation&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0 http:&#x2F;&#x2F;maven.apache.org&#x2F;xsd&#x2F;maven-4.0.0.xsd&quot;&gt;</span><br><span class="line">    &lt;modelVersion&gt;4.0.0&lt;&#x2F;modelVersion&gt;</span><br><span class="line"></span><br><span class="line">    &lt;groupId&gt;com.rabbitmq&lt;&#x2F;groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;rabbitmq-springboot&lt;&#x2F;artifactId&gt;</span><br><span class="line">    &lt;packaging&gt;pom&lt;&#x2F;packaging&gt;</span><br><span class="line">    &lt;version&gt;1.0-SNAPSHOT&lt;&#x2F;version&gt;</span><br><span class="line">    &lt;modules&gt;</span><br><span class="line">        &lt;module&gt;rabbitmq-consumer&lt;&#x2F;module&gt;</span><br><span class="line">        &lt;module&gt;rabbitmq-producer&lt;&#x2F;module&gt;</span><br><span class="line">    &lt;&#x2F;modules&gt;</span><br><span class="line"></span><br><span class="line">    &lt;parent&gt;</span><br><span class="line">        &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;spring-boot-starter-parent&lt;&#x2F;artifactId&gt;</span><br><span class="line">        &lt;version&gt;2.1.5.RELEASE&lt;&#x2F;version&gt;</span><br><span class="line">    &lt;&#x2F;parent&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &lt;properties&gt;</span><br><span class="line">        &lt;project.build.sourceEncoding&gt;UTF-8&lt;&#x2F;project.build.sourceEncoding&gt;</span><br><span class="line">        &lt;project.reporting.outputEncoding&gt;UTF-8&lt;&#x2F;project.reporting.outputEncoding&gt;</span><br><span class="line">        &lt;java.version&gt;1.8&lt;&#x2F;java.version&gt;</span><br><span class="line">    &lt;&#x2F;properties&gt;</span><br><span class="line"></span><br><span class="line">    &lt;dependencies&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter&lt;&#x2F;artifactId&gt;</span><br><span class="line">        &lt;&#x2F;dependency&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter-web&lt;&#x2F;artifactId&gt;</span><br><span class="line">        &lt;&#x2F;dependency&gt;</span><br><span class="line"></span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter-test&lt;&#x2F;artifactId&gt;</span><br><span class="line">            &lt;scope&gt;test&lt;&#x2F;scope&gt;</span><br><span class="line">        &lt;&#x2F;dependency&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter-amqp&lt;&#x2F;artifactId&gt;</span><br><span class="line">        &lt;&#x2F;dependency&gt;</span><br><span class="line">    &lt;&#x2F;dependencies&gt;</span><br><span class="line"></span><br><span class="line">    &lt;build&gt;</span><br><span class="line">        &lt;plugins&gt;</span><br><span class="line">            &lt;plugin&gt;</span><br><span class="line">                &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;</span><br><span class="line">                &lt;artifactId&gt;spring-boot-maven-plugin&lt;&#x2F;artifactId&gt;</span><br><span class="line">            &lt;&#x2F;plugin&gt;</span><br><span class="line">        &lt;&#x2F;plugins&gt;</span><br><span class="line">    &lt;&#x2F;build&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;&#x2F;project&gt;</span><br></pre></td></tr></table></figure>
+<p><strong>生产者端：</strong></p>
+<ul>
+<li>第一步：pom.xml配置如下：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;project xmlns&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0&quot;</span><br><span class="line">         xmlns:xsi&#x3D;&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2001&#x2F;XMLSchema-instance&quot;</span><br><span class="line">         xsi:schemaLocation&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0 http:&#x2F;&#x2F;maven.apache.org&#x2F;xsd&#x2F;maven-4.0.0.xsd&quot;&gt;</span><br><span class="line">    &lt;parent&gt;</span><br><span class="line">        &lt;artifactId&gt;rabbitmq-springboot&lt;&#x2F;artifactId&gt;</span><br><span class="line">        &lt;groupId&gt;com.rabbitmq&lt;&#x2F;groupId&gt;</span><br><span class="line">        &lt;version&gt;1.0-SNAPSHOT&lt;&#x2F;version&gt;</span><br><span class="line">    &lt;&#x2F;parent&gt;</span><br><span class="line">    &lt;modelVersion&gt;4.0.0&lt;&#x2F;modelVersion&gt;</span><br><span class="line"></span><br><span class="line">    &lt;artifactId&gt;rabbitmq-producer&lt;&#x2F;artifactId&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;&#x2F;project&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>第二步：application.yml配置文件</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">server:</span><br><span class="line">  port: 8001</span><br><span class="line"></span><br><span class="line">spring:</span><br><span class="line">  rabbitmq:</span><br><span class="line">    addresses: 192.168.31.62:5672</span><br><span class="line">    username: guest</span><br><span class="line">    password: guest</span><br><span class="line">    virtual-host: &#x2F;</span><br><span class="line">    connection-timeout: 15000</span><br><span class="line">    publisher-confirms: true    # confirm模式</span><br><span class="line">    publisher-returns: true     # return机制</span><br><span class="line">    template:</span><br><span class="line">      mandatory: true           # 与return机制结合配置次属性</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ul>
+<li>第三步：编写RabbitSender生产端代码</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">package com.rabbitmq.producer;</span><br><span class="line"></span><br><span class="line">import org.springframework.amqp.core.Message;</span><br><span class="line">import org.springframework.amqp.rabbit.connection.CorrelationData;</span><br><span class="line">import org.springframework.amqp.rabbit.core.RabbitTemplate;</span><br><span class="line">import org.springframework.amqp.rabbit.core.RabbitTemplate.ConfirmCallback;</span><br><span class="line">import org.springframework.amqp.rabbit.core.RabbitTemplate.ReturnCallback;</span><br><span class="line">import org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line">import org.springframework.lang.Nullable;</span><br><span class="line">import org.springframework.messaging.MessageHeaders;</span><br><span class="line">import org.springframework.messaging.support.MessageBuilder;</span><br><span class="line">import org.springframework.stereotype.Component;</span><br><span class="line"></span><br><span class="line">import java.util.Map;</span><br><span class="line"></span><br><span class="line">@Component</span><br><span class="line">public class RabbitMQSender &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private RabbitTemplate rabbitTemplate;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F;回调函数，confirm确认</span><br><span class="line">    final ConfirmCallback confirmCallback &#x3D; new ConfirmCallback() &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void confirm(@Nullable CorrelationData correlationData, boolean ack, @Nullable String cause) &#123;</span><br><span class="line">            System.out.println(&quot;correlationData: &quot; + correlationData);</span><br><span class="line">            System.out.println(&quot;ack: &quot; + ack);</span><br><span class="line">            if (!ack) &#123;</span><br><span class="line">                System.out.println(&quot;异常处理......&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F;回调函数，return返回</span><br><span class="line">    final ReturnCallback returnCallback &#x3D; new ReturnCallback() &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void returnedMessage(Message message, int replyCode, String replyText, String exchange, String routingKey) &#123;</span><br><span class="line">            System.out.println(&quot;exchange: &quot; + exchange + &quot;,routingKey: &quot; + routingKey +</span><br><span class="line">                                &quot;,replyCode: &quot; + replyCode + &quot;,replyText: &quot; + replyText);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F;发送消息方法调用：构建Message消息</span><br><span class="line">    public void send(Object message, Map&lt;String, Object&gt; properties) throws Exception &#123;</span><br><span class="line">        MessageHeaders mhs &#x3D; new MessageHeaders(properties);</span><br><span class="line">        org.springframework.messaging.Message msg &#x3D; MessageBuilder.createMessage(message, mhs);</span><br><span class="line">        rabbitTemplate.setConfirmCallback(confirmCallback);</span><br><span class="line">        rabbitTemplate.setReturnCallback(returnCallback);</span><br><span class="line">        CorrelationData correlationData &#x3D; new CorrelationData(&quot;1234567890&quot;);</span><br><span class="line">        rabbitTemplate.convertAndSend(&quot;exchange-1&quot;, &quot;springboot.abc&quot;, msg, correlationData);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>消费者端：</strong></p>
+<ul>
+<li>第一步：pom.xml配置如下：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;project xmlns&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0&quot;</span><br><span class="line">         xmlns:xsi&#x3D;&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2001&#x2F;XMLSchema-instance&quot;</span><br><span class="line">         xsi:schemaLocation&#x3D;&quot;http:&#x2F;&#x2F;maven.apache.org&#x2F;POM&#x2F;4.0.0 http:&#x2F;&#x2F;maven.apache.org&#x2F;xsd&#x2F;maven-4.0.0.xsd&quot;&gt;</span><br><span class="line">    &lt;parent&gt;</span><br><span class="line">        &lt;artifactId&gt;rabbitmq-springboot&lt;&#x2F;artifactId&gt;</span><br><span class="line">        &lt;groupId&gt;com.rabbitmq&lt;&#x2F;groupId&gt;</span><br><span class="line">        &lt;version&gt;1.0-SNAPSHOT&lt;&#x2F;version&gt;</span><br><span class="line">    &lt;&#x2F;parent&gt;</span><br><span class="line">    &lt;modelVersion&gt;4.0.0&lt;&#x2F;modelVersion&gt;</span><br><span class="line"></span><br><span class="line">    &lt;artifactId&gt;rabbitmq-consumer&lt;&#x2F;artifactId&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;&#x2F;project&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>第二步：application.yml配置文件</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">server:</span><br><span class="line">  port: 8002</span><br><span class="line"></span><br><span class="line">spring:</span><br><span class="line">  rabbitmq:</span><br><span class="line">    addresses: 192.168.31.62:5672</span><br><span class="line">    username: guest</span><br><span class="line">    password: guest</span><br><span class="line">    virtual-host: &#x2F;</span><br><span class="line">    connection-timeout: 15000</span><br><span class="line">    listener:</span><br><span class="line">      simple:</span><br><span class="line">        acknowledge-mode: manual    # 手工签收</span><br><span class="line">        concurrency: 5</span><br><span class="line">        max-concurrency: 10</span><br></pre></td></tr></table></figure>
+<ul>
+<li>第三步：RabbitRecever消费端代码</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">package com.rabbitmq.consumer;</span><br><span class="line"></span><br><span class="line">import com.rabbitmq.client.Channel;</span><br><span class="line">import org.springframework.amqp.rabbit.annotation.*;</span><br><span class="line">import org.springframework.amqp.support.AmqpHeaders;</span><br><span class="line">import org.springframework.messaging.Message;</span><br><span class="line">import org.springframework.stereotype.Component;</span><br><span class="line"></span><br><span class="line">@Component</span><br><span class="line">public class RabbitMQReceiver &#123;</span><br><span class="line"></span><br><span class="line">    @RabbitListener(bindings &#x3D; @QueueBinding(</span><br><span class="line">            value &#x3D; @Queue(value &#x3D; &quot;queue-1&quot;,</span><br><span class="line">                           durable&#x3D;&quot;true&quot;),</span><br><span class="line">            exchange &#x3D; @Exchange(value &#x3D; &quot;exchange-1&quot;,</span><br><span class="line">                                 durable&#x3D;&quot;true&quot;,</span><br><span class="line">                                 type&#x3D; &quot;topic&quot;,</span><br><span class="line">                                 ignoreDeclarationExceptions &#x3D; &quot;true&quot;),</span><br><span class="line">            key &#x3D; &quot;springboot.*&quot;</span><br><span class="line">            )</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    @RabbitHandler</span><br><span class="line">    public void onMessage(Message message, Channel channel) throws Exception &#123;</span><br><span class="line">        System.err.println(&quot;--------------------------------------&quot;);</span><br><span class="line">        System.err.println(&quot;消费端Payload: &quot; + message.getPayload());</span><br><span class="line">        Long deliveryTag &#x3D; (Long)message.getHeaders().get(AmqpHeaders.DELIVERY_TAG);</span><br><span class="line">        &#x2F;&#x2F;手工ACK</span><br><span class="line">        channel.basicAck(deliveryTag, false);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>生产端测试：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">package com.rabbitmq.test;</span><br><span class="line"></span><br><span class="line">import com.rabbitmq.producer.RabbitMQSender;</span><br><span class="line">import org.junit.Test;</span><br><span class="line">import org.junit.runner.RunWith;</span><br><span class="line">import org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line">import org.springframework.boot.test.context.SpringBootTest;</span><br><span class="line">import org.springframework.test.context.junit4.SpringRunner;</span><br><span class="line"></span><br><span class="line">import java.text.SimpleDateFormat;</span><br><span class="line">import java.util.Date;</span><br><span class="line">import java.util.HashMap;</span><br><span class="line">import java.util.Map;</span><br><span class="line"></span><br><span class="line">@RunWith(SpringRunner.class)</span><br><span class="line">@SpringBootTest</span><br><span class="line">public class ApplicationTest &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private RabbitMQSender rabbitMQSender;</span><br><span class="line"></span><br><span class="line">    private static SimpleDateFormat simpleDateFormat &#x3D; new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss.SSS&quot;);</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    public void testSender() throws Exception &#123;</span><br><span class="line">        Map&lt;String, Object&gt; properties &#x3D; new HashMap&lt;&gt;();</span><br><span class="line">        properties.put(&quot;number&quot;, &quot;12345&quot;);</span><br><span class="line">        properties.put(&quot;send_time&quot;, simpleDateFormat.format(new Date()));</span><br><span class="line">        rabbitMQSender.send(&quot;Hello RabbitMQ For SpringBoot!&quot;, properties);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>源码地址 <a target="_blank" rel="noopener" href="https://github.com/dupeihui/rabbitmq-springboot">https://github.com/dupeihui/rabbitmq-springboot</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/17/RabbitMQ%E4%B8%AD%E7%9A%84Confirm%E7%A1%AE%E8%AE%A4%E4%B8%8EReturn%E8%BF%94%E5%9B%9E%E6%B6%88%E6%81%AF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="PD">
+      <meta itemprop="description" content="Cream rises to the top.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/02/17/RabbitMQ%E4%B8%AD%E7%9A%84Confirm%E7%A1%AE%E8%AE%A4%E4%B8%8EReturn%E8%BF%94%E5%9B%9E%E6%B6%88%E6%81%AF/" class="post-title-link" itemprop="url">RabbitMQ中的Confirm确认与Return返回消息</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-02-17 18:40:25" itemprop="dateCreated datePublished" datetime="2021-02-17T18:40:25+08:00">2021-02-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-02-21 23:20:57" itemprop="dateModified" datetime="2021-02-21T23:20:57+08:00">2021-02-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">分布式架构</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><strong>Confirm消息确认机制：</strong>  </p>
+<ul>
+<li>消息的确认是指生产者投递消息后，如果Broker收到消息，则会给我们生产者一个应答。  </li>
+<li>生产者进行接受应答，用来确认这条消息是否正常的发送到Broker，这种方式也是消息的可靠性投递的核心保障。</li>
+</ul>
+<img src="/2021/02/17/RabbitMQ%E4%B8%AD%E7%9A%84Confirm%E7%A1%AE%E8%AE%A4%E4%B8%8EReturn%E8%BF%94%E5%9B%9E%E6%B6%88%E6%81%AF/confirm.png" class="">
+
+<p><strong>如何实现Confirm确认消息？</strong>  </p>
+<ul>
+<li>第一步：在channel上开启确认模式：channel.confirmSelect()</li>
+<li>第二步：在channel上添加监听：addConfirmListener，监听成功和失败的返回结果，根据具体的结果对消息进行重新发送、或者记录日志等后续处理。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;生产端代码</span><br><span class="line">        &#x2F;&#x2F;1 创建ConnectionFactory</span><br><span class="line">        ConnectionFactory connectionFactory &#x3D; new ConnectionFactory();</span><br><span class="line">        connectionFactory.setHost(&quot;127.0.0.1&quot;);</span><br><span class="line">        connectionFactory.setPort(5672);</span><br><span class="line">        connectionFactory.setVirtualHost(&quot;&#x2F;&quot;);</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F;2 获取C    onnection</span><br><span class="line">        Connection connection &#x3D; connectionFactory.newConnection();</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F;3 通过Connection创建一个新的Channel</span><br><span class="line">        Channel channel &#x3D; connection.createChannel();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F;4 指定我们的消息投递模式: 消息的确认模式</span><br><span class="line">        channel.confirmSelect();</span><br><span class="line"></span><br><span class="line">        String exchangeName &#x3D; &quot;test_confirm_exchange&quot;;</span><br><span class="line">        String routingKey &#x3D; &quot;confirm.save&quot;;</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F;5 发送一条消息</span><br><span class="line">        String msg &#x3D; &quot;Hello RabbitMQ Send confirm message!&quot;;</span><br><span class="line">        channel.basicPublish(exchangeName, routingKey, null, msg.getBytes());</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F;6 添加一个确认监听</span><br><span class="line">        channel.addConfirmListener(new ConfirmListener() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void handleNack(long deliveryTag, boolean multiple) throws IOException &#123;</span><br><span class="line">                System.err.println(&quot;-------no ack!-----------&quot;);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void handleAck(long deliveryTag, boolean multiple) throws IOException &#123;</span><br><span class="line">                System.err.println(&quot;-------ack!-----------&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;消费端代码</span><br><span class="line">        &#x2F;&#x2F;1 创建ConnectionFactory</span><br><span class="line">        ConnectionFactory connectionFactory &#x3D; new ConnectionFactory();</span><br><span class="line">        connectionFactory.setHost(&quot;127.0.0.1&quot;);</span><br><span class="line">        connectionFactory.setPort(5672);</span><br><span class="line">        connectionFactory.setVirtualHost(&quot;&#x2F;&quot;);</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F;2 获取C    onnection</span><br><span class="line">        Connection connection &#x3D; connectionFactory.newConnection();</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F;3 通过Connection创建一个新的Channel</span><br><span class="line">        Channel channel &#x3D; connection.createChannel();</span><br><span class="line"></span><br><span class="line">        String exchangeName &#x3D; &quot;test_confirm_exchange&quot;;</span><br><span class="line">        String routingKey &#x3D; &quot;confirm.#&quot;;</span><br><span class="line">        String queueName &#x3D; &quot;test_confirm_queue&quot;;</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F;4 声明交换机和队列 然后进行绑定设置, 最后制定路由Key</span><br><span class="line">        channel.exchangeDeclare(exchangeName, &quot;topic&quot;, true);</span><br><span class="line">        channel.queueDeclare(queueName, true, false, false, null);</span><br><span class="line">        channel.queueBind(queueName, exchangeName, routingKey);</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F;5 创建消费者</span><br><span class="line">        QueueingConsumer queueingConsumer &#x3D; new QueueingConsumer(channel);</span><br><span class="line">        channel.basicConsume(queueName, true, queueingConsumer);</span><br><span class="line"></span><br><span class="line">        while(true)&#123;</span><br><span class="line">            Delivery delivery &#x3D; queueingConsumer.nextDelivery();</span><br><span class="line">            String msg &#x3D; new String(delivery.getBody());</span><br><span class="line"></span><br><span class="line">            System.err.println(&quot;消费端: &quot; + msg);</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Return消息返回机制：</strong>  </p>
+<ul>
+<li><p>Return Listener用于处理一些不可路由的消息。</p>
+</li>
+<li><p>我们的消息生产者，通过指定一个Exchange和Routingkey，把消息送到某一个队列中，然后我们的消费者监听队列，进行消息处理操作。但是在某些情况下，如果我们在发送消息的时候，当前的exchange不存在或者指定的路由key路由不到，这个时候我们需要监听这种不可达的消息，就要使用return listener。  </p>
+<p><strong>在基础API中有一个关键的配置项：</strong><br><strong>mandatory：</strong> 如果为true，则监听会接收到路由不可达的消息，然后进行后续处理，如果为false，那么broker端自动删除该消息。（默认false）</p>
+</li>
+</ul>
+<img src="/2021/02/17/RabbitMQ%E4%B8%AD%E7%9A%84Confirm%E7%A1%AE%E8%AE%A4%E4%B8%8EReturn%E8%BF%94%E5%9B%9E%E6%B6%88%E6%81%AF/return.png" class="">
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;生产端代码</span><br><span class="line">        ConnectionFactory connectionFactory &#x3D; new ConnectionFactory();</span><br><span class="line">        connectionFactory.setHost(&quot;127.0.0.1&quot;);</span><br><span class="line">        connectionFactory.setPort(5672);</span><br><span class="line">        connectionFactory.setVirtualHost(&quot;&#x2F;&quot;);</span><br><span class="line"></span><br><span class="line">        Connection connection &#x3D; connectionFactory.newConnection();</span><br><span class="line">        Channel channel &#x3D; connection.createChannel();</span><br><span class="line"></span><br><span class="line">        String exchange &#x3D; &quot;test_return_exchange&quot;;</span><br><span class="line">        String routingKey &#x3D; &quot;return.save&quot;;</span><br><span class="line">        String routingKeyError &#x3D; &quot;abc.save&quot;;</span><br><span class="line"></span><br><span class="line">        String msg &#x3D; &quot;Hello RabbitMQ Return Message&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        channel.addReturnListener(new ReturnListener() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void handleReturn(int replyCode, String replyText, String exchange,</span><br><span class="line">                    String routingKey, AMQP.BasicProperties properties, byte[] body) throws IOException &#123;</span><br><span class="line"></span><br><span class="line">                System.err.println(&quot;---------handle  return----------&quot;);</span><br><span class="line">                System.err.println(&quot;replyCode: &quot; + replyCode);</span><br><span class="line">                System.err.println(&quot;replyText: &quot; + replyText);</span><br><span class="line">                System.err.println(&quot;exchange: &quot; + exchange);</span><br><span class="line">                System.err.println(&quot;routingKey: &quot; + routingKey);</span><br><span class="line">                System.err.println(&quot;properties: &quot; + properties);</span><br><span class="line">                System.err.println(&quot;body: &quot; + new String(body));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        channel.basicPublish(exchange, routingKeyError, true, null, msg.getBytes());</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;消费端代码</span><br><span class="line">        ConnectionFactory connectionFactory &#x3D; new ConnectionFactory();</span><br><span class="line">        connectionFactory.setHost(&quot;127.0.0.1&quot;);</span><br><span class="line">        connectionFactory.setPort(5672);</span><br><span class="line">        connectionFactory.setVirtualHost(&quot;&#x2F;&quot;);</span><br><span class="line"></span><br><span class="line">        Connection connection &#x3D; connectionFactory.newConnection();</span><br><span class="line">        Channel channel &#x3D; connection.createChannel();</span><br><span class="line"></span><br><span class="line">        String exchangeName &#x3D; &quot;test_return_exchange&quot;;</span><br><span class="line">        String routingKey &#x3D; &quot;return.#&quot;;</span><br><span class="line">        String queueName &#x3D; &quot;test_return_queue&quot;;</span><br><span class="line"></span><br><span class="line">        channel.exchangeDeclare(exchangeName, &quot;topic&quot;, true, false, null);</span><br><span class="line">        channel.queueDeclare(queueName, true, false, false, null);</span><br><span class="line">        channel.queueBind(queueName, exchangeName, routingKey);</span><br><span class="line"></span><br><span class="line">        QueueingConsumer queueingConsumer &#x3D; new QueueingConsumer(channel);</span><br><span class="line"></span><br><span class="line">        channel.basicConsume(queueName, true, queueingConsumer);</span><br><span class="line"></span><br><span class="line">        while(true)&#123;</span><br><span class="line"></span><br><span class="line">            Delivery delivery &#x3D; queueingConsumer.nextDelivery();</span><br><span class="line">            String msg &#x3D; new String(delivery.getBody());</span><br><span class="line">            System.err.println(&quot;消费者: &quot; + msg);</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/13/RabbitMQ%E5%85%A5%E9%97%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -950,247 +1157,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/11/21/nginx%E6%97%A5%E5%BF%97%E5%88%87%E5%89%B2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="PD">
-      <meta itemprop="description" content="Cream rises to the top.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/11/21/nginx%E6%97%A5%E5%BF%97%E5%88%87%E5%89%B2/" class="post-title-link" itemprop="url">nginx日志切割</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-11-21 15:30:55" itemprop="dateCreated datePublished" datetime="2020-11-21T15:30:55+08:00">2020-11-21</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-02-23 21:21:54" itemprop="dateModified" datetime="2021-02-23T21:21:54+08:00">2021-02-23</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">集群架构</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="nginx日志切割-手动"><a href="#nginx日志切割-手动" class="headerlink" title="nginx日志切割-手动"></a>nginx日志切割-手动</h2><p>现有的日志都会存在<code>access.log</code>文件中，但是随着时间的推移，这个文件的内容越来越大，体积也越来越大，不便于运维人员查看，所以我们可以通过把这个大的日志文件切割为多份不同的小文件作为日志，切割规则可以以天为单位，如果每天有几百G或者几个T的日志的话，则可以按需以每半天或者每小时对日志切割一下。<br><strong>具体步骤如下：</strong><br>1.创建一个shell可执行文件：<code>cut_my_log.sh</code>，内容为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;bin&#x2F;bash</span><br><span class="line">LOG_PATH&#x3D;&quot;&#x2F;var&#x2F;log&#x2F;nginx&quot;</span><br><span class="line">RECORD_TIME&#x3D;$(date -d &quot;yesterday&quot; +%Y-%m-%d+%H:%M)</span><br><span class="line">PID&#x3D;&#x2F;var&#x2F;run&#x2F;nginx&#x2F;nginx.pid</span><br><span class="line">mv $&#123;LOG_PATH&#125;&#x2F;access.log $&#123;LOG_PATH&#125;&#x2F;access.$&#123;RECORD_TIME&#125;.log</span><br><span class="line">mv $&#123;LOG_PATH&#125;&#x2F;error.log $&#123;LOG_PATH&#125;&#x2F;error.$&#123;RECORD_TIME&#125;.log</span><br><span class="line"></span><br><span class="line"># 向nginx主进程发送信号，用于重新打开日志文件</span><br><span class="line">kill -USR1 &#96;cat $PID&#96;</span><br></pre></td></tr></table></figure>
-<p>2.为<code>cut_my_log.sh</code>添加可执行权限：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod +x cut_my_log.sh</span><br></pre></td></tr></table></figure>
-<p>3.测试日志切割后的结果：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;cut_my_log.sh</span><br></pre></td></tr></table></figure>
-<h2 id="nginx日志切割-定时"><a href="#nginx日志切割-定时" class="headerlink" title="nginx日志切割-定时"></a>nginx日志切割-定时</h2><p><strong>使用定时任务</strong><br>  1.安装定时任务<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install crontabs</span><br></pre></td></tr></table></figure><br>  2.<code>crontabs -e</code>编辑并且添加一行新的任务：<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*&#x2F;1 * * * * &#x2F;usr&#x2F;local&#x2F;nginx&#x2F;sbin&#x2F;cut_my_log.sh</span><br></pre></td></tr></table></figure><br>  3.重启定时任务<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service crond restart</span><br></pre></td></tr></table></figure><br>  附：常用定时任务命令：<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">service crond start     &#x2F;&#x2F;启动服务</span><br><span class="line">service crond stop      &#x2F;&#x2F;关闭服务</span><br><span class="line">service crond restart   &#x2F;&#x2F;重启服务</span><br><span class="line">service crond reload    &#x2F;&#x2F;重新载入配置</span><br><span class="line">crontabs -e             &#x2F;&#x2F;编辑任务</span><br><span class="line">crontabs -l             &#x2F;&#x2F;查看任务列表</span><br></pre></td></tr></table></figure><br><strong>定时任务表达式：</strong><br>cron表达式，分为5或6个域，每个域代表一个含义，如下：</p>
-<table>
-<thead>
-<tr>
-<th align="center"></th>
-<th align="center">分</th>
-<th align="center">时</th>
-<th align="center">日</th>
-<th align="center">月</th>
-<th align="center">星期</th>
-<th align="center">年（可选）</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">取值范围</td>
-<td align="center">0-59</td>
-<td align="center">0-23</td>
-<td align="center">1-31</td>
-<td align="center">1-12</td>
-<td align="center">1-7</td>
-<td align="center">2020/2021/2022/…</td>
-</tr>
-</tbody></table>
-<p><strong>常用表达式：</strong><br>  每分钟执行：<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*&#x2F;1 * * * *</span><br></pre></td></tr></table></figure><br>  每日凌晨（每天晚上23:59）执行：<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">59 23 * * *</span><br></pre></td></tr></table></figure><br>  每日凌晨一点执行：<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0 1 * * *</span><br></pre></td></tr></table></figure></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/11/21/nginx-conf%E6%A0%B8%E5%BF%83%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="PD">
-      <meta itemprop="description" content="Cream rises to the top.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/11/21/nginx-conf%E6%A0%B8%E5%BF%83%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="post-title-link" itemprop="url">nginx.conf核心配置文件</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-11-21 15:26:25" itemprop="dateCreated datePublished" datetime="2020-11-21T15:26:25+08:00">2020-11-21</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-02-23 21:21:11" itemprop="dateModified" datetime="2021-02-23T21:21:11+08:00">2021-02-23</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">集群架构</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>1.设置worker进程的用户，指的linux中的用户，会涉及到linux操作目录或文件的一些权限，默认为<code>nobody</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#user nobody;</span><br></pre></td></tr></table></figure>
-<p>2.worker进程工作数设置，一般来说CPU有几个，就设置几个，或者设置为N-1也行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">worker_processes 1;</span><br></pre></td></tr></table></figure>
-<p>3.nginx日志级别<code>debug|info|notice|warn|error|crit|alert|emerg</code>,错误级别从左到右越来越大<br>4.设置nginx进程pid</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pid logs&#x2F;nginx.pid;</span><br></pre></td></tr></table></figure>
-<p>5.设置工作模式</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">events &#123;</span><br><span class="line">    # 默认使用epoll</span><br><span class="line">    use epoll;</span><br><span class="line"></span><br><span class="line">    # 每个worker允许连接的客户端最大连接数</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>6.http指令块，针对http网络传输的一些指令配置</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">http&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>7.include引入外部配置，提高可读性，避免单个配置文件过大</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">include mime.types;</span><br></pre></td></tr></table></figure>
-<p>8.设定日志格式，<code>main</code>为定义的格式名称，如此access_log就可以直接使用这个变量了</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#log_format  main  &#39;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &#39;</span><br><span class="line">#                  &#39;$status $body_bytes_sent &quot;$http_referer&quot; &#39;</span><br><span class="line">#                  &#39;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#39;;</span><br><span class="line"></span><br><span class="line">#access_log  logs&#x2F;access.log  main;</span><br></pre></td></tr></table></figure>
-<table>
-<thead>
-<tr>
-<th align="left">参数名</th>
-<th align="left">参数意义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">$remote_addr</td>
-<td align="left">客户端IP</td>
-</tr>
-<tr>
-<td align="left">$remote_user</td>
-<td align="left">远程客户端用户名，一般为：‘-’</td>
-</tr>
-<tr>
-<td align="left">$time_local</td>
-<td align="left">时间和时区</td>
-</tr>
-<tr>
-<td align="left">$request</td>
-<td align="left">请求的url以及method</td>
-</tr>
-<tr>
-<td align="left">$status</td>
-<td align="left">响应状态码</td>
-</tr>
-<tr>
-<td align="left">$body_bytes_sent</td>
-<td align="left">响应客户端内容字节数</td>
-</tr>
-<tr>
-<td align="left">$http_referer</td>
-<td align="left">记录用户从哪个链接跳转过来的</td>
-</tr>
-<tr>
-<td align="left">$http_user_agent</td>
-<td align="left">用户所使用的代理，一般来时都是浏览器</td>
-</tr>
-<tr>
-<td align="left">$http_x_forwarded_for</td>
-<td align="left">通过代理服务器来记录客户端的IP</td>
-</tr>
-</tbody></table>
-<p>9.<code>sendfile</code>使用高效文件传输，提升传输性能，启动后才能使用<code>tcp_nopush</code>,是指当数据表积累一定大小才发送，提高了效率</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sendfile        on;</span><br><span class="line">#tcp_nopush     on;</span><br></pre></td></tr></table></figure>
-<p>10.keepalive_timeout设置客户端与服务端请求的超时时间，保证客户端多次请求的时候不会重复建立新的连接，节约资源损耗。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#keepalive_timeout  0;</span><br><span class="line">keepalive_timeout  65;</span><br></pre></td></tr></table></figure>
-<p>11.gzip启用压缩，html/js/css压缩后传输会更快</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gzip on;</span><br></pre></td></tr></table></figure>
-<p>12.<code>server</code>可以在<code>http</code>指令块中设置多个虚拟机  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  localhost;</span><br><span class="line"></span><br><span class="line">        #charset koi8-r;</span><br><span class="line"></span><br><span class="line">        #access_log  logs&#x2F;host.access.log  main;</span><br><span class="line"></span><br><span class="line">        location &#x2F; &#123;</span><br><span class="line">            root   html;</span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">        &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1260,7 +1226,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-count">30</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1273,7 +1239,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-count">18</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
